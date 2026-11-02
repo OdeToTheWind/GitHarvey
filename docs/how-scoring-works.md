@@ -1,0 +1,62 @@
+# How scoring works
+
+GitHarvey gives every repo a health score from 0 to 100. It is a starting point, not a verdict. Source: `src/lib/score.ts`, `src/lib/profiles.ts`.
+
+## Signals
+
+| Signal | Source | Value |
+|---|---|---|
+| Recent activity | `pushed_at` | under 30 days = 1, under 180 = 0.6, under 365 = 0.3, else 0 |
+| License | `license` | none = 0, present = 1 |
+| Docs | `homepage` | present = 1, else 0.5 |
+| Popularity | stars | `min(log10(stars + 1) / 5, 1)` |
+| Release bonus | latest release | within 365 days adds 0.05. A missing release is neutral |
+
+With the "permissive license" priority, only MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC and Unlicense count as 1. Other licenses count as 0.5.
+
+## Weights by audience
+
+Each row sums to 1.0.
+
+| Audience | Recent activity | License | Docs | Popularity |
+|---|---|---|---|---|
+| beginner | 0.2 | 0.1 | 0.4 | 0.3 |
+| developer | 0.4 | 0.15 | 0.15 | 0.3 |
+| security | 0.5 | 0.1 | 0.1 | 0.3 |
+| founder | 0.3 | 0.3 | 0.1 | 0.3 |
+
+With the goal **learn**, docs gain 0.1 and popularity loses 0.1, because good docs matter more than popularity when you are learning.
+
+## "Why this score"
+
+Every result card has a "Why this score" panel. It lists each signal, what was found, and the points it added out of its maximum. Points above 100 are not counted. The release bonus shows "Not checked yet" until you press Expand.
+
+## Badges
+
+- 70 and above: Healthy (green)
+- 40 to 69: Okay (yellow)
+- under 40: Risky (red)
+- Archived repos are capped at 20 and always red.
+
+Every badge shows the word and the number, so colour is never the only signal.
+
+## How the search works
+
+One GitHub search call fetches the 30 best matches. GitHarvey scores all 30 and re-ranks them by health, so the order is not just GitHub's. You see 10 at a time with "Show more".
+
+- "Actively maintained" adds a `pushed:>` filter (one year back).
+- "Popular" requires more than 100 stars. Otherwise repos need more than 10 stars.
+- "Beginner friendly" adds `good-first-issues:>0`.
+- "Permissive license" changes the license score, as above.
+- Goal "stay updated" asks GitHub for the most recently updated matches first.
+- Goal "compare" starts with the top three results ticked for comparison.
+- Archived repos are always excluded from search.
+
+Scores in the compare view use the same audience, goal and priorities as your search, so one repo has one score everywhere.
+
+## Limits
+
+- Stars are not quality. New repos score low on popularity.
+- A repo with no releases is not penalized.
+- The 30-repo pool comes from GitHub's own relevance, so a good match GitHub ranks low may not appear.
+- Scores are a starting point. Read the repo before you depend on it.

@@ -1,0 +1,394 @@
+[
+  {
+    "fullName": "codecrafters-io/build-your-own-x",
+    "day": 1,
+    "audience": [
+      "beginner",
+      "developer"
+    ],
+    "oneLiner": "A collection of guides for rebuilding well-known technologies from scratch, such as a database, a Git client or a shell.",
+    "useWhen": "You learn best by rebuilding a tool piece by piece and already know one programming language.",
+    "skipWhen": "You need a production-ready library. These are teaching projects, and guide quality varies by author.",
+    "alternatives": [
+      "practical-tutorials/project-based-learning"
+    ]
+  },
+  {
+    "fullName": "nilbuild/developer-roadmap",
+    "day": 2,
+    "audience": [
+      "beginner"
+    ],
+    "oneLiner": "Visual step-by-step roadmaps for roles and skills such as frontend, backend and DevOps.",
+    "useWhen": "You don't know what to learn next on your career path.",
+    "skipWhen": "You want hands-on practice. Roadmaps list topics but don't teach them.",
+    "alternatives": [
+      "EbookFoundation/free-programming-books",
+      "practical-tutorials/project-based-learning"
+    ]
+  },
+  {
+    "fullName": "EbookFoundation/free-programming-books",
+    "day": 3,
+    "audience": [
+      "beginner"
+    ],
+    "oneLiner": "A large, community-maintained index of free books, courses and interactive tutorials in many languages.",
+    "useWhen": "You want free learning material for a specific language or topic.",
+    "skipWhen": "You want one recommended path. It is an index, so you must pick and judge quality yourself.",
+    "alternatives": [
+      "nilbuild/developer-roadmap"
+    ]
+  },
+  {
+    "fullName": "practical-tutorials/project-based-learning",
+    "day": 4,
+    "audience": [
+      "beginner"
+    ],
+    "oneLiner": "Lists of tutorials that teach programming by building a complete project, organised by language.",
+    "useWhen": "You know the basics of a language and want a project to build next.",
+    "skipWhen": "You need theory or reference documentation. Tutorials vary in age, so check the dates first.",
+    "alternatives": [
+      "codecrafters-io/build-your-own-x"
+    ]
+  },
+  {
+    "fullName": "donnemartin/system-design-primer",
+    "day": 5,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A study guide to designing large-scale systems, with diagrams, trade-off notes and practice questions.",
+    "useWhen": "You are preparing for system design interviews or learning how scalable systems fit together.",
+    "skipWhen": "You need vendor-specific or very recent guidance. It teaches fundamentals, so check newer sources for details.",
+    "alternatives": [
+      "jwasham/coding-interview-university"
+    ]
+  },
+  {
+    "fullName": "jwasham/coding-interview-university",
+    "day": 6,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A long, structured self-study plan for software engineering interviews, from data structures to system design.",
+    "useWhen": "You want a complete study plan and have months to follow it.",
+    "skipWhen": "You have only a few weeks or already work with these topics. It is very long and not tailored to specific companies.",
+    "alternatives": [
+      "donnemartin/system-design-primer",
+      "TheAlgorithms/Python"
+    ]
+  },
+  {
+    "fullName": "TheAlgorithms/Python",
+    "day": 7,
+    "audience": [
+      "beginner",
+      "developer"
+    ],
+    "oneLiner": "Readable Python implementations of many algorithms and data structures.",
+    "useWhen": "You want to read how an algorithm works in plain Python, or study alongside a visualizer.",
+    "skipWhen": "You need fast, production-grade code. Use the standard library or tested packages such as NumPy instead.",
+    "alternatives": [
+      "keon/algorithms"
+    ]
+  },
+  {
+    "fullName": "BurntSushi/ripgrep",
+    "day": 8,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A very fast command-line search tool that respects .gitignore by default.",
+    "useWhen": "You search large codebases from the terminal and want speed and sensible defaults.",
+    "skipWhen": "You need lookaround regex features. Those require ripgrep's optional PCRE2 mode.",
+    "alternatives": [
+      "ggreer/the_silver_searcher"
+    ]
+  },
+  {
+    "fullName": "junegunn/fzf",
+    "day": 9,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A general-purpose fuzzy finder for the terminal that filters any list as you type.",
+    "useWhen": "You want to find files, shell history entries or Git branches quickly from your shell.",
+    "skipWhen": "You navigate only with a graphical editor. Most of its value comes from shell integration.",
+    "alternatives": [
+      "skim-rs/skim"
+    ]
+  },
+  {
+    "fullName": "jesseduffield/lazygit",
+    "day": 10,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A terminal interface for Git that turns common commands into keyboard-driven screens.",
+    "useWhen": "You use Git daily and want to stage, rebase and resolve conflicts without typing every command.",
+    "skipWhen": "You are still learning how Git works. Learn the commands first so you know what the interface is doing.",
+    "alternatives": [
+      "jonas/tig"
+    ]
+  },
+  {
+    "fullName": "tldr-pages/tldr",
+    "day": 11,
+    "audience": [
+      "beginner",
+      "developer"
+    ],
+    "oneLiner": "Community-written cheat sheets showing the most common examples for command-line tools.",
+    "useWhen": "You know a command exists but forget its flags.",
+    "skipWhen": "You need complete option references. Use the tool's own man page for that.",
+    "alternatives": [
+      "cheat/cheat"
+    ]
+  },
+  {
+    "fullName": "sharkdp/bat",
+    "day": 12,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A cat clone with syntax highlighting, line numbers and Git integration.",
+    "useWhen": "You read files in the terminal and want readable output.",
+    "skipWhen": "You pipe output into scripts and need it raw. Use plain cat, or bat's plain mode.",
+    "alternatives": []
+  },
+  {
+    "fullName": "excalidraw/excalidraw",
+    "day": 13,
+    "audience": [
+      "developer",
+      "founder"
+    ],
+    "oneLiner": "A browser-based whiteboard for sketching diagrams with a hand-drawn look.",
+    "useWhen": "You want a quick diagram for docs, slides or a design discussion.",
+    "skipWhen": "You need strict, formal diagrams such as UML with precise alignment. A dedicated diagramming tool fits better.",
+    "alternatives": [
+      "jgraph/drawio",
+      "tldraw/tldraw"
+    ]
+  },
+  {
+    "fullName": "public-apis/public-apis",
+    "day": 14,
+    "audience": [
+      "developer",
+      "founder"
+    ],
+    "oneLiner": "A categorized list of free public APIs for developers.",
+    "useWhen": "You need a data source for a side project or prototype.",
+    "skipWhen": "You need guaranteed uptime or terms you can rely on in production. Check each API's auth, limits and status first.",
+    "alternatives": [
+      "public-api-lists/public-api-lists"
+    ]
+  },
+  {
+    "fullName": "danielmiessler/SecLists",
+    "day": 15,
+    "audience": [
+      "security"
+    ],
+    "oneLiner": "A collection of wordlists for security testing: usernames, passwords, URL paths and fuzzing patterns.",
+    "useWhen": "You run authorized security tests and need wordlists for discovery or fuzzing. Use only on systems you own or have written permission to test.",
+    "skipWhen": "You lack permission to test the target, or need a small focused list. The full collection is large.",
+    "alternatives": [
+      "swisskyrepo/PayloadsAllTheThings"
+    ]
+  },
+  {
+    "fullName": "swisskyrepo/PayloadsAllTheThings",
+    "day": 16,
+    "audience": [
+      "security"
+    ],
+    "oneLiner": "A reference of payloads and bypass techniques for web application security testing.",
+    "useWhen": "You test an application you are authorized to test and want a reference for one vulnerability class.",
+    "skipWhen": "You are new to web security or lack authorization. Start with OWASP learning material instead.",
+    "alternatives": [
+      "OWASP/CheatSheetSeries"
+    ]
+  },
+  {
+    "fullName": "projectdiscovery/nuclei",
+    "day": 17,
+    "audience": [
+      "security"
+    ],
+    "oneLiner": "A template-based vulnerability scanner that checks targets against community-written YAML templates.",
+    "useWhen": "You scan systems you are authorized to test and want repeatable, template-driven checks.",
+    "skipWhen": "You need manual, in-depth testing of business logic. Template scanners find known patterns, not custom flaws.",
+    "alternatives": [
+      "zaproxy/zaproxy"
+    ]
+  },
+  {
+    "fullName": "ffuf/ffuf",
+    "day": 18,
+    "audience": [
+      "security"
+    ],
+    "oneLiner": "A fast web fuzzer written in Go for discovering hidden paths, parameters and virtual hosts. Fuzzing means sending many guessed inputs and watching how the server responds.",
+    "useWhen": "You do authorized content discovery and want speed with flexible response filtering.",
+    "skipWhen": "You are not authorized to test the target. Aggressive fuzzing can overload servers and trigger alarms.",
+    "alternatives": [
+      "OJ/gobuster",
+      "epi052/feroxbuster"
+    ]
+  },
+  {
+    "fullName": "mitmproxy/mitmproxy",
+    "day": 19,
+    "audience": [
+      "security",
+      "developer"
+    ],
+    "oneLiner": "An interactive HTTPS proxy for inspecting, modifying and replaying traffic between an app and the network.",
+    "useWhen": "You debug what your own app sends and receives, or test how an API behaves.",
+    "skipWhen": "You only need simple request tests. A plain HTTP client is quicker. Only intercept traffic from devices and apps you own.",
+    "alternatives": [
+      "zaproxy/zaproxy"
+    ]
+  },
+  {
+    "fullName": "OWASP/CheatSheetSeries",
+    "day": 20,
+    "audience": [
+      "developer",
+      "security"
+    ],
+    "oneLiner": "Short, practical guides on secure coding and defense for topics like authentication and input validation.",
+    "useWhen": "You are writing code and want concise best practices for one security topic.",
+    "skipWhen": "You need a full threat model or a compliance checklist. These sheets are focused tips, not a complete program.",
+    "alternatives": [
+      "OWASP/ASVS"
+    ]
+  },
+  {
+    "fullName": "ollama/ollama",
+    "day": 21,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A tool for running large language models locally, with a simple command line and an API.",
+    "useWhen": "You want to try or build with open models on your own machine without sending data to a cloud service.",
+    "skipWhen": "Your hardware is limited. Larger models need a lot of memory, and the largest need a strong GPU.",
+    "alternatives": [
+      "ggml-org/llama.cpp"
+    ]
+  },
+  {
+    "fullName": "supabase/supabase",
+    "day": 22,
+    "audience": [
+      "founder",
+      "developer"
+    ],
+    "oneLiner": "An open-source backend platform built on Postgres, with auth, storage and APIs.",
+    "useWhen": "You want a Postgres-based backend with auth and storage quickly and are comfortable with SQL.",
+    "skipWhen": "You need heavily custom backend logic or no platform dependency. Self-hosting takes real effort.",
+    "alternatives": [
+      "pocketbase/pocketbase",
+      "appwrite/appwrite"
+    ]
+  },
+  {
+    "fullName": "shadcn-ui/ui",
+    "day": 23,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "Accessible React components styled with Tailwind that you copy into your own project.",
+    "useWhen": "You use React and Tailwind and want full control over the component code.",
+    "skipWhen": "You want a versioned package you can update with one command. Copied components are yours to maintain.",
+    "alternatives": [
+      "mui/material-ui",
+      "chakra-ui/chakra-ui"
+    ]
+  },
+  {
+    "fullName": "n8n-io/n8n",
+    "day": 24,
+    "audience": [
+      "founder"
+    ],
+    "oneLiner": "A workflow automation tool with a visual editor that connects apps and APIs and can be self-hosted.",
+    "useWhen": "You want to automate repeated tasks between apps and prefer a visual builder you can host yourself.",
+    "skipWhen": "You need a standard open-source license. Check n8n's license terms before building a commercial product on it.",
+    "alternatives": [
+      "activepieces/activepieces",
+      "huginn/huginn"
+    ]
+  },
+  {
+    "fullName": "langchain-ai/langchain",
+    "day": 25,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "A framework for building applications with language models: prompts, tools, retrieval and agents.",
+    "useWhen": "You are building a multi-step LLM application and want ready-made integrations.",
+    "skipWhen": "Your app is a single model call. Your model provider's SDK is simpler and easier to debug.",
+    "alternatives": [
+      "run-llama/llama_index"
+    ]
+  },
+  {
+    "fullName": "maplibre/maplibre-gl-js",
+    "day": 26,
+    "audience": [
+      "developer"
+    ],
+    "oneLiner": "An open-source library for interactive vector maps in the browser.",
+    "useWhen": "You need web maps without Mapbox's license and billing and can supply your own map tiles.",
+    "skipWhen": "You want a ready-made map with tiles included. You must choose a tile source and style yourself.",
+    "alternatives": [
+      "leaflet/Leaflet",
+      "openlayers/openlayers"
+    ]
+  },
+  {
+    "fullName": "pocketbase/pocketbase",
+    "day": 27,
+    "audience": [
+      "founder"
+    ],
+    "oneLiner": "A single-file backend with a database, auth, file storage and an admin interface.",
+    "useWhen": "You want a small backend for a side project or small app, deployed as one binary.",
+    "skipWhen": "You expect heavy write traffic or need horizontal scaling. It is built around SQLite on one server.",
+    "alternatives": [
+      "supabase/supabase",
+      "appwrite/appwrite"
+    ]
+  },
+  {
+    "fullName": "awesome-selfhosted/awesome-selfhosted",
+    "day": 28,
+    "audience": [
+      "founder",
+      "developer"
+    ],
+    "oneLiner": "A curated list of free software you can host yourself, grouped by category.",
+    "useWhen": "You want to replace a paid SaaS tool with something you run yourself.",
+    "skipWhen": "You don't want to maintain servers, updates and backups. Self-hosting makes those tasks yours.",
+    "alternatives": []
+  },
+  {
+    "fullName": "sindresorhus/awesome",
+    "day": 29,
+    "audience": [
+      "beginner",
+      "developer",
+      "security",
+      "founder"
+    ],
+    "oneLiner": "A curated list of awesome lists, organised by topic.",
+    "useWhen": "You want to find the best list for a topic before searching on your own.",
+    "skipWhen": "You need a single answer. Lists point to many options, and quality varies from list to list.",
+    "alternatives": []
+  }
+]

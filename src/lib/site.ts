@@ -1,0 +1,24 @@
+export const TAGLINE = "Great repos are everywhere. Find yours.";
+
+export const ABOUT =
+  "GitHarvey helps you find the right GitHub repo for your goal. Tell it who you are and what you need, and get repos scored for health, with the reasons shown, and compared side by side. Free, open source, no database. Bring your own read-only token, or self-host on Vercel.";
+
+/**
+ * The public GitHub repo, set with NEXT_PUBLIC_REPO_URL (for example
+ * https://github.com/yourname/githarvey). Anything that is not a github.com
+ * https URL is ignored, so the footer never links somewhere unexpected.
+ */
+export function parseRepoUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value.trim());
+    const ok = url.protocol === "https:" && url.hostname === "github.com" && /^\/[\w.-]+\/[\w.-]+\/?$/.test(url.pathname);
+    return ok ? `https://github.com${url.pathname.replace(/\/$/, "")}` : null;
+  } catch {
+    return null;
+  }
+}
+
+export function repoUrl(): string | null {
+  return parseRepoUrl(process.env.NEXT_PUBLIC_REPO_URL);
+}
