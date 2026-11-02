@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CatName } from "@/lib/cat-icons";
 import { Cat } from "../Cat";
 import { Cards } from "./Cards";
 
@@ -58,15 +59,48 @@ export function Steps() {
   );
 }
 
-export function FinalCta() {
+function CtaCard({ icon, heading, text, href, label, primary }: {
+  icon: CatName;
+  heading: string;
+  text: string;
+  href: string;
+  label: string;
+  primary: boolean;
+}) {
   return (
     <section className="glow-card mt-16 flex flex-wrap items-center justify-between gap-6 p-8">
       <div>
-        <Cat name="search" size={88} />
-        <h2 className="text-2xl">Ready to find yours?</h2>
-        <p className="text-muted">Free for everyone. Open source. No database.</p>
+        <Cat name={icon} size={88} />
+        <h2 className="text-2xl">{heading}</h2>
+        <p className="text-muted">{text}</p>
       </div>
-      <Link href="/start" className="btn-primary">Get started</Link>
+      <Link href={href} className={primary ? "btn-primary" : "btn-secondary"}>{label}</Link>
     </section>
+  );
+}
+
+export function CompareCta() {
+  return (
+    <CtaCard
+      icon="compare"
+      heading="Torn between two repos?"
+      text="Put two or three side by side and see which one is healthier."
+      href="/compare"
+      label="Compare repos"
+      primary={false}
+    />
+  );
+}
+
+export function FinalCta() {
+  return (
+    <CtaCard
+      icon="search"
+      heading="Ready to find yours?"
+      text="Free for everyone. Open source. No database."
+      href="/start"
+      label="Get started"
+      primary
+    />
   );
 }

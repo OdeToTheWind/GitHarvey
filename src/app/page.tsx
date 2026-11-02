@@ -1,6 +1,6 @@
 import { Banner } from "@/components/landing/Banner";
 import { Hero } from "@/components/landing/Hero";
-import { Audiences, FinalCta, Features, Steps } from "@/components/landing/Sections";
+import { Audiences, CompareCta, FinalCta, Features, Steps } from "@/components/landing/Sections";
 
 export default function Home() {
   return (
@@ -10,6 +10,7 @@ export default function Home() {
       <Features />
       <Audiences />
       <Steps />
+      <CompareCta />
       <FinalCta />
     </main>
   );

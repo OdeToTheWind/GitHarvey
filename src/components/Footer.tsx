@@ -20,6 +20,7 @@ export function Footer() {
             <li><Link href="/start" className={link}>Get started</Link></li>
             <li><Link href="/compare" className={link}>Compare repos</Link></li>
             <li><Link href="/privacy" className={link}>Privacy</Link></li>
+            <li><Link href="/disclaimer" className={link}>Disclaimer</Link></li>
           </ul>
         </nav>
         <nav aria-label="Open source">
@@ -39,7 +40,7 @@ export function Footer() {
       </div>
       <div className="mt-10 space-y-1 border-t border-line pt-6">
         <p>Free and open source (MIT). No database, no analytics, no ads.</p>
-        <p>GitHarvey is not affiliated with GitHub. Repo data comes from the public GitHub API.</p>
+        <p>GitHarvey is not affiliated with GitHub. Repo data comes from the public GitHub API. <Link href="/disclaimer" className="underline underline-offset-4">Read the disclaimer</Link>.</p>
         <p>Fonts: CamingoCode by Jan Fromm (CC BY-ND 3.0) and Catgirl System Font.</p>
       </div>
     </footer>

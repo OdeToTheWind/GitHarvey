@@ -204,14 +204,10 @@ h1, h2, h3 {
     opacity: 0;
   }
 }
-@keyframes bob {
-  50% {
-    transform: translateY(-8px);
-  }
-}
-@keyframes drift {
-  to {
-    transform: translateX(-50%);
+@keyframes move-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.9);
   }
 }
 
@@ -226,32 +222,17 @@ h1, h2, h3 {
 .brand-tagline {
   animation: fade-in 0.8s ease 1s backwards;
 }
-.cat-bob {
-  display: inline-block;
-  animation: bob 3s ease-in-out infinite;
-}
-.marquee {
-  overflow: hidden;
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: drift 28s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
+/* The steps sit still. Hovering the row plays "move in", one step after another. */
+.scene-row:hover .step {
+  animation: move-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .brand-letter,
   .brand-cursor,
   .brand-tagline,
-  .cat-bob,
-  .marquee-track {
+  .scene-row:hover .step {
     animation: none !important;
-  }
-  .marquee {
-    overflow-x: auto;
   }
 }
 

@@ -31,4 +31,4 @@ GitHarvey depends on open-source packages, each under its own license. All direc
 
 ## GitHub
 
-GitHarvey is not affiliated with or endorsed by GitHub. Repository data comes from the public GitHub REST API and is subject to GitHub's terms of service. "GitHub" is a trademark of GitHub, Inc.
+GitHarvey is not affiliated with or endorsed by GitHub. Repository data comes from the public GitHub REST API and is subject to GitHub's terms of service. "GitHub" is a trademark of GitHub, Inc. See [docs/disclaimer.md](docs/disclaimer.md).

@@ -1,6 +1,17 @@
-# GitHarvey
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-dark.png">
+    <img src="docs/images/banner-light.png" alt="GitHarvey: Great repos are everywhere. Find yours." width="100%">
+  </picture>
+</p>
 
-**Great repos are everywhere. Find yours.**
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-0a5cff"></a>
+  <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000">
+  <img alt="TypeScript strict" src="https://img.shields.io/badge/TypeScript-strict-0a5cff">
+  <img alt="No database" src="https://img.shields.io/badge/database-none-000000">
+  <img alt="Free" src="https://img.shields.io/badge/price-free-0a5cff">
+</p>
 
 GitHarvey helps you find the right GitHub repo for your goal. Tell it who you are and what you need, and get repos scored for health, with the reasons shown, and compared side by side. Free, open source, no database. Bring your own read-only token, or self-host on Vercel.
 
@@ -100,6 +111,10 @@ Five signals (recent activity, license, docs, popularity, a release bonus), weig
 ## Tech stack
 
 Next.js (App Router), React, TypeScript (strict), Tailwind CSS, iron-session, zod, and Vitest. No other runtime dependencies.
+
+## Disclaimer
+
+GitHarvey is not affiliated with GitHub, Inc. It calls the official GitHub API only after you act (save a token, search, compare, or press Expand), using your read-only token or, if the site owner enabled it, theirs. Scores are automated estimates from public data, not an audit or an endorsement, so read a repo's code and license before you depend on it. The repository is public and open source, so you can see exactly what is sent to GitHub. Full text: [docs/disclaimer.md](docs/disclaimer.md).
 
 ## Contributing
 

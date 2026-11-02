@@ -12,24 +12,6 @@ const SCENE: { icon: CatName; caption: string }[] = [
   { icon: "healthy", caption: "Choose well" },
 ];
 
-function Scene({ hidden = false }: { hidden?: boolean }) {
-  return (
-    <ul className="flex shrink-0 items-end gap-10 pr-10" aria-hidden={hidden || undefined}>
-      {SCENE.map((item, i) => (
-        <li key={item.caption} className="flex items-end gap-10">
-          <span className="flex flex-col items-center gap-1">
-            <span className="cat-bob" style={{ animationDelay: `${i * 0.35}s` }}>
-              <Cat name={item.icon} size={96} />
-            </span>
-            <span className="text-sm text-muted">{item.caption}</span>
-          </span>
-          <span className="pb-8 text-2xl text-neon" aria-hidden="true">→</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 /** Animated brand banner. Pure CSS motion, switched off by prefers-reduced-motion. */
 export function Banner() {
   return (
@@ -45,12 +27,23 @@ export function Banner() {
         </p>
         <p className="brand-tagline mt-2 text-muted">From a thousand repos to the right one.</p>
       </div>
-      <div className="marquee mt-6 border-t border-line py-6">
-        <p className="sr-only">Search, score, compare and rank GitHub repos.</p>
-        <div className="marquee-track" aria-hidden="true">
-          <Scene />
-          <Scene hidden />
-        </div>
+      {/* Second row: the five steps, still until hovered, then they move in. */}
+      <div className="scene-row mt-6 border-t border-line px-5 py-8 sm:px-8">
+        <ul className="mx-auto flex max-w-5xl flex-wrap items-end justify-center gap-x-2 gap-y-6">
+          {SCENE.map((item, i) => (
+            <li key={item.caption} className="flex items-end">
+              <span className="step flex flex-col items-center gap-1 px-3" style={{ animationDelay: `${i * 0.12}s` }}>
+                <Cat name={item.icon} size={96} />
+                <span className="text-sm text-muted">{item.caption}</span>
+              </span>
+              {i < SCENE.length - 1 && (
+                <span aria-hidden="true" className="step hidden pb-8 text-2xl text-neon lg:block" style={{ animationDelay: `${i * 0.12 + 0.06}s` }}>
+                  →
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

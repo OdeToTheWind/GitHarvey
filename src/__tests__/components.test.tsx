@@ -71,3 +71,16 @@ describe("CompareTable ties", () => {
     expect(html).not.toContain(">best<");
   });
 });
+
+import { CompareCta, FinalCta } from "@/components/landing/Sections";
+
+describe("landing call-to-action cards", () => {
+  it("has a Compare card that links to /compare, matching the final card", () => {
+    const compare = renderToStaticMarkup(createElement(CompareCta));
+    const final = renderToStaticMarkup(createElement(FinalCta));
+    expect(compare).toContain("Torn between two repos?");
+    expect(compare).toContain('href="/compare"');
+    expect(final).toContain('href="/start"');
+    expect(compare.replace(/<[^>]+>/g, "").length).toBeGreaterThan(20);
+  });
+});
