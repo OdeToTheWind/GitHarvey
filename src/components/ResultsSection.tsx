@@ -1,6 +1,6 @@
 import { encodePrefs } from "@/lib/prefs";
 import { describeError, type ErrorInfo } from "@/lib/errors";
-import { runSearch, pickToken } from "@/lib/search";
+import { runSearch } from "@/lib/search";
 import { readToken } from "@/lib/session";
 import type { Preferences, RateInfo, ScoredRepo } from "@/types";
 import { ErrorBanner } from "./ErrorBanner";
@@ -13,7 +13,7 @@ import { SetupNotice } from "./SetupNotice";
 export async function ResultsSection({ prefs, limit, page = "/finder" }: { prefs: Preferences; limit?: number; page?: "/finder" | "/my" }) {
   const state = await readToken();
   if (!state.configured) return <SetupNotice />;
-  const token = pickToken(state.token);
+  const token = state.token;
   if (!token) return <NeedToken next={`${page}?${encodePrefs(prefs)}`} />;
 
   let data: { results: ScoredRepo[]; rate: RateInfo } | null = null;

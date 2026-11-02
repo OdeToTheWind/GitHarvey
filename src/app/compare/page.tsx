@@ -12,7 +12,7 @@ import { describeError, type ErrorInfo } from "@/lib/errors";
 import { parseCompare } from "@/lib/format";
 import { compareHref } from "@/lib/links";
 import { decodeScoring } from "@/lib/prefs";
-import { loadScoredRepo, pickToken } from "@/lib/search";
+import { loadScoredRepo } from "@/lib/search";
 import { readToken } from "@/lib/session";
 import type { ScoredRepo, ScoringPrefs } from "@/types";
 
@@ -43,7 +43,7 @@ export default async function ComparePage({ searchParams }: Props) {
   const parsed = parseCompare(raw);
   const scoring = decodeScoring(params);
   const state = parsed.ok ? await readToken() : { configured: true, token: null };
-  const token = parsed.ok && state.configured ? pickToken(state.token) : null;
+  const token = parsed.ok && state.configured ? state.token : null;
   const loaded = parsed.ok && token ? await loadAll(parsed.names, token, scoring) : null;
 
   return (

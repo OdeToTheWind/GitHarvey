@@ -26,13 +26,13 @@ GitHub search ranks by stars and stops there. GitHarvey scores how healthy each 
 
 ## Features
 
-- **Health score, 0 to 100,** with a Healthy / Okay / Risky badge. The word and number always appear, so colour is never the only signal.
+- **Health score, 0 to 100,** with a Healthy / Okay / Risky label. The word and number always appear, so colour is never the only signal.
 - **"Why this score"** on every result: each signal, what was found, and the points it added.
 - **Answers that change the search.** Audience sets the scoring weights. Goal and priorities change the query: recently updated, popular, beginner friendly (good first issues), permissive license.
 - **Side-by-side comparison** of two or three repos, with the best value in each row marked and a data-only summary line.
 - **Shareable links** for comparisons and for your results page. They hold repo names and your answers, never your token.
 - **Your page** remembers your answers in your browser.
-- **README badge** for any repo: `![GitHarvey](https://your-site/api/badge/owner/repo)` (needs the host's fallback token).
+- **Bring your own token.** There is no shared or host token, so nobody can spend someone else's GitHub quota.
 - **Return after sign-in.** After you add a token you land back on the results you asked for.
 
 ## Quick start
@@ -59,10 +59,8 @@ Set these in `.env.local` (or in your Vercel project). See [docs/self-hosting.md
 | Variable | Required | Purpose |
 |---|---|---|
 | `SESSION_SECRET` | yes | 32 or more characters. Encrypts the token cookie |
-| `ENABLE_FALLBACK` | no | `true` lets visitors search without their own token, using yours. Default `false` |
-| `FALLBACK_GITHUB_TOKEN` | no | A fine-grained, public-read-only token for the fallback and for badges |
 | `NEXT_PUBLIC_SITE_URL` | no | Your site address, for the social preview image |
-| `NEXT_PUBLIC_REPO_URL` | no | Your repo address, for the footer links |
+| `NEXT_PUBLIC_REPO_URL` | no | Your repo address, for the GitHub link in the navbar and the footer links. Hidden when unset |
 
 ## Scripts
 
@@ -79,12 +77,12 @@ Run `npm run lint && npm run typecheck && npm test && npm run build` before you 
 ## Project structure
 
 ```
-src/app          pages and API routes (session, release, badge), social preview image
+src/app          pages and API routes (session, release), social preview image
 src/components   UI; landing/ holds the home page sections
 src/lib          logic: scoring, query building, GitHub client, session, cache
 src/__tests__    unit and component tests
 fonts/           CamingoCode (text) and Catgirl System Font (pictures)
-docs/            how scoring works, token safety, self-hosting
+docs/            how scoring works, token safety, self-hosting, disclaimer
 ```
 
 Files in `src/lib` that touch the token or GitHub start with `import "server-only"`, so they can never be bundled for the browser.
@@ -102,7 +100,7 @@ Details: [docs/token-safety.md](docs/token-safety.md).
 
 ## Deploy your own
 
-Fork the repo and import it into Vercel, set `SESSION_SECRET`, and deploy. Step by step, with a checklist: [docs/self-hosting.md](docs/self-hosting.md).
+Fork the repo and import it into Vercel, set `SESSION_SECRET` (and `NEXT_PUBLIC_REPO_URL` for the navbar and footer links), and deploy. Step by step, with a checklist: [docs/self-hosting.md](docs/self-hosting.md).
 
 ## How scoring works
 
@@ -114,7 +112,7 @@ Next.js (App Router), React, TypeScript (strict), Tailwind CSS, iron-session, zo
 
 ## Disclaimer
 
-GitHarvey is not affiliated with GitHub, Inc. It calls the official GitHub API only after you act (save a token, search, compare, or press Expand), using your read-only token or, if the site owner enabled it, theirs. Scores are automated estimates from public data, not an audit or an endorsement, so read a repo's code and license before you depend on it. The repository is public and open source, so you can see exactly what is sent to GitHub. Full text: [docs/disclaimer.md](docs/disclaimer.md).
+GitHarvey is not affiliated with GitHub, Inc. It calls the official GitHub API only after you act (save a token, search, compare, or press Expand), using your own read-only token. Scores are automated estimates from public data, not an audit or an endorsement, so read a repo's code and license before you depend on it. The repository is public and open source, so you can see exactly what is sent to GitHub. Full text: [docs/disclaimer.md](docs/disclaimer.md).
 
 ## Contributing
 
@@ -122,4 +120,4 @@ Issues and pull requests are welcome. Keep changes small and targeted, keep comp
 
 ## License
 
-Code: [MIT](LICENSE). Fonts and dependencies have their own terms: see [NOTICE.md](NOTICE.md).
+Code: [MIT](LICENSE), copyright 2026 Bhargavi Badal. Fonts and dependencies have their own terms: see [NOTICE.md](NOTICE.md).

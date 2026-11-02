@@ -13,14 +13,13 @@ GitHarvey calls the official GitHub REST API (`api.github.com`) only after you a
 - you save a token (one call to `/rate_limit`, which does not use quota),
 - you run a search (one search call),
 - you open a comparison (repo and release lookups for the repos you chose),
-- you press Expand on a result (one release lookup),
-- someone loads a README badge for a repo (cached for an hour, and only if the site owner enabled the fallback token).
+- you press Expand on a result (one release lookup).
 
 The home, start, privacy and disclaimer pages make no request to GitHub.
 
 ## Whose token is used
 
-Requests are made by the server, not your browser. They use your read-only token, kept in an encrypted `httpOnly` cookie, or the site owner's fallback token if the owner turned it on. They count against that token's GitHub rate limit. When the limit is reached, GitHarvey shows the reset time and stops. The token is sent only to `api.github.com` and is never logged. See [token-safety.md](token-safety.md).
+Requests are made by the server, not your browser. They use your read-only token, kept in an encrypted `httpOnly` cookie. They count against your token's GitHub rate limit. When the limit is reached, GitHarvey shows the reset time and stops. The token is sent only to `api.github.com` and is never logged. See [token-safety.md](token-safety.md).
 
 ## What it keeps
 
@@ -28,7 +27,7 @@ Public repository data is cached in server memory for up to 10 minutes to save r
 
 ## Scores are estimates
 
-Scores and badges are automated. They come from public signals: recent activity, license, docs, popularity and releases (see [how-scoring-works.md](how-scoring-works.md)). They are a starting point. They are not an audit, a security review, an endorsement, or a promise that a repo is safe, maintained or right for you. Data from GitHub can be incomplete or out of date, and a license shown here may be wrong. Read the code and the license before you depend on a repo.
+Scores and labels are automated. They come from public signals: recent activity, license, docs, popularity and releases (see [how-scoring-works.md](how-scoring-works.md)). They are a starting point. They are not an audit, a security review, an endorsement, or a promise that a repo is safe, maintained or right for you. Data from GitHub can be incomplete or out of date, and a license shown here may be wrong. Read the code and the license before you depend on a repo.
 
 ## GitHub's terms apply
 

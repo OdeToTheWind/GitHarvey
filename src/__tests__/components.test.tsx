@@ -9,6 +9,8 @@ vi.mock("next/link", () => ({
   default: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => createElement("a", { href, ...rest }, children),
 }));
 
+vi.mock("@/lib/use-stored", () => ({ useStoredPrefs: () => null }));
+
 import { CompareTable } from "@/components/CompareTable";
 import { ResultCard } from "@/components/ResultCard";
 import { ResultsList } from "@/components/ResultsList";
@@ -82,5 +84,15 @@ describe("landing call-to-action cards", () => {
     expect(compare).toContain('href="/compare"');
     expect(final).toContain('href="/start"');
     expect(compare.replace(/<[^>]+>/g, "").length).toBeGreaterThan(20);
+  });
+});
+
+describe("Header GitHub link", () => {
+  it("shows the GitHub link next to Compare only when a repo is set", async () => {
+    const { Header } = await import("@/components/Header");
+    const withRepo = renderToStaticMarkup(<Header hasToken={false} repo="https://github.com/me/githarvey" />);
+    expect(withRepo).toContain('href="https://github.com/me/githarvey"');
+    expect(withRepo.indexOf("Compare")).toBeLessThan(withRepo.indexOf("GitHub"));
+    expect(renderToStaticMarkup(<Header hasToken={false} repo={null} />)).not.toContain("GitHub");
   });
 });

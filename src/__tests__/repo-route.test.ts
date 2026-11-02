@@ -20,7 +20,6 @@ beforeEach(() => {
   resetRateLimits();
   loadRelease.mockReset();
   vi.stubEnv("SESSION_SECRET", "s".repeat(40));
-  vi.stubEnv("ENABLE_FALLBACK", "false");
 });
 
 describe("GET /api/release", () => {
@@ -29,16 +28,7 @@ describe("GET /api/release", () => {
     expect((await call("a/b/c")).status).toBe(400);
     expect(loadRelease).not.toHaveBeenCalled();
   });
-  it("asks for a token when there is none and no fallback", async () => {
+  it("asks for a token when there is none", async () => {
     expect((await call("a/b")).status).toBe(401);
-  });
-  it("uses the fallback token when the host enabled it, and never returns it", async () => {
-    vi.stubEnv("ENABLE_FALLBACK", "true");
-    vi.stubEnv("FALLBACK_GITHUB_TOKEN", "github_pat_FALLBACK_SECRET_123456");
-    loadRelease.mockResolvedValue({ lastReleaseAt: null });
-    const res = await call("a/b");
-    expect(res.status).toBe(200);
-    expect(loadRelease).toHaveBeenCalledWith("a/b", "github_pat_FALLBACK_SECRET_123456");
-    expect(JSON.stringify(await res.json())).not.toContain("FALLBACK_SECRET");
   });
 });

@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { hasToken } from "@/lib/session";
-import { ABOUT, TAGLINE } from "@/lib/site";
+import { ABOUT, repoUrl, TAGLINE } from "@/lib/site";
 import "./globals.css";
 
 const camingo = localFont({
@@ -44,7 +44,7 @@ export default async function RootLayout({
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <Header hasToken={await hasToken()} />
+        <Header hasToken={await hasToken()} repo={repoUrl()} />
         <div id="main" className="flex-1">
           {children}
         </div>

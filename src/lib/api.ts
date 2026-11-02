@@ -4,7 +4,6 @@ import { z } from "zod";
 import { describeError } from "./errors";
 import { allow, clientIp } from "./ratelimit";
 import { isValidRepoName } from "./repoName";
-import { pickToken } from "./search";
 import { readToken } from "./session";
 
 const nameSchema = z.string().refine(isValidRepoName);
@@ -26,7 +25,7 @@ export async function repoLookup<T>(
 
   const state = await readToken();
   if (!state.configured) return json({ error: "Server is not configured." }, 500);
-  const token = pickToken(state.token);
+  const token = state.token;
   if (!token) return json({ error: "Add a read-only GitHub token first." }, 401);
 
   try {

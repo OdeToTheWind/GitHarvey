@@ -4,9 +4,9 @@ import { getEnv } from "@/lib/env";
 afterEach(() => vi.unstubAllEnvs());
 
 describe("getEnv", () => {
-  it("accepts a valid secret and defaults the fallback off", () => {
+  it("accepts a valid secret", () => {
     vi.stubEnv("SESSION_SECRET", "x".repeat(32));
-    expect(getEnv().ENABLE_FALLBACK).toBe(false);
+    expect(getEnv().SESSION_SECRET).toHaveLength(32);
   });
   it("names the bad key without printing its value", () => {
     vi.stubEnv("SESSION_SECRET", "too-short-secret");

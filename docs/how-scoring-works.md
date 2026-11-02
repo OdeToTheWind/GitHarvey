@@ -31,14 +31,14 @@ With the goal **learn**, docs gain 0.1 and popularity loses 0.1, because good do
 
 Every result card has a "Why this score" panel. It lists each signal, what was found, and the points it added out of its maximum. Points above 100 are not counted. The release bonus shows "Not checked yet" until you press Expand.
 
-## Badges
+## Health labels
 
 - 70 and above: Healthy (green)
 - 40 to 69: Okay (yellow)
 - under 40: Risky (red)
 - Archived repos are capped at 20 and always red.
 
-Every badge shows the word and the number, so colour is never the only signal.
+Every label shows the word and the number, so colour is never the only signal.
 
 ## How the search works
 

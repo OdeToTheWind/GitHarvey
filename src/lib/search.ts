@@ -1,14 +1,8 @@
 import "server-only";
 import type { Preferences, RateInfo, RepoHealth, ScoredRepo, ScoringPrefs } from "@/types";
-import { getFallbackToken } from "./env";
 import { getLatestRelease, getRepo, searchRepos } from "./github";
 import { buildSearchQuery, searchSort } from "./query";
 import { DEFAULT_SCORING, scoreRepo } from "./score";
-
-/** The visitor's token, or the host's fallback token when the host enabled it. */
-export function pickToken(userToken: string | null): string | null {
-  return userToken ?? getFallbackToken();
-}
 
 /** One GitHub call. Results are scored without release data; see loadRelease. */
 export async function runSearch(

@@ -15,7 +15,7 @@ export const DISCLAIMER_SECTIONS: CardItem[] = [
   {
     icon: "token",
     title: "Whose token is used",
-    text: "Requests come from the server, using your read-only token from an encrypted cookie, or the site owner's token if they turned that on. They count against that token's GitHub rate limit. When it runs out, GitHarvey shows the reset time and stops.",
+    text: "Requests come from the server, using your read-only token from an encrypted cookie. They count against your token's GitHub rate limit. When it runs out, GitHarvey shows the reset time and stops.",
   },
   {
     icon: "docs",
@@ -25,7 +25,7 @@ export const DISCLAIMER_SECTIONS: CardItem[] = [
   {
     icon: "score",
     title: "Scores are estimates",
-    text: "Scores and badges are automated, built from public signals such as recent activity, license, docs, popularity and releases. They are a starting point, not an audit, a security review, an endorsement or a promise that a repo is safe, maintained or right for you. GitHub data can be incomplete or out of date. Read the code and the license before you depend on a repo.",
+    text: "Scores and labels are automated, built from public signals such as recent activity, license, docs, popularity and releases. They are a starting point, not an audit, a security review, an endorsement or a promise that a repo is safe, maintained or right for you. GitHub data can be incomplete or out of date. Read the code and the license before you depend on a repo.",
   },
   {
     icon: "compare",
