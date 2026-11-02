@@ -53,7 +53,7 @@ export function Onboarding() {
   const Step = STEPS[step] ?? AudienceStep;
   const last = step === STEPS.length - 1;
   return (
-    <form onSubmit={finish} className="glow-card space-y-6 p-5">
+    <form onSubmit={finish} className="glow-card space-y-8 p-8">
       <p className="text-sm text-muted" aria-live="polite">Step {step + 1} of {STEPS.length}</p>
       <Step draft={draft} update={update} />
       {error && <p role="alert" className="text-clay">{error}</p>}

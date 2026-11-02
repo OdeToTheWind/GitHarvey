@@ -43,11 +43,11 @@ const STEPS = [
 
 export function Steps() {
   return (
-    <section aria-labelledby="how-h" className="mt-16">
+    <section aria-labelledby="how-h" className="mt-28 sm:mt-40">
       <h2 id="how-h" className="text-2xl sm:text-3xl">How it works</h2>
-      <ol className="mt-6 grid gap-5 lg:grid-cols-3">
+      <ol className="mt-12 grid gap-8 lg:grid-cols-3">
         {STEPS.map((s, i) => (
-          <li key={s.title} className="glow-card flex flex-col gap-2 p-5">
+          <li key={s.title} className="glow-card flex flex-col gap-3 p-8">
             <Cat name={s.icon} size={88} />
             <p className="text-sm text-muted">Step {i + 1}</p>
             <h3 className="font-bold">{s.title}</h3>
@@ -68,11 +68,11 @@ function CtaCard({ icon, heading, text, href, label, primary }: {
   primary: boolean;
 }) {
   return (
-    <section className="glow-card mt-16 flex flex-wrap items-center justify-between gap-6 p-8">
+    <section className="glow-card mt-28 flex flex-wrap items-center justify-between gap-8 p-10 sm:mt-40 sm:p-14">
       <div>
         <Cat name={icon} size={88} />
-        <h2 className="text-2xl">{heading}</h2>
-        <p className="text-muted">{text}</p>
+        <h2 className="mt-3 text-2xl">{heading}</h2>
+        <p className="mt-2 text-muted">{text}</p>
       </div>
       <Link href={href} className={primary ? "btn-primary" : "btn-secondary"}>{label}</Link>
     </section>

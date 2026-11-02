@@ -39,9 +39,9 @@ export function CompareTable({ items }: { items: ScoredRepo[] }) {
       <table className="w-full min-w-[34rem] border-collapse text-left">
         <thead>
           <tr className="border-b border-line">
-            <td className="p-4" />
+            <td className="p-6" />
             {items.map((r) => (
-              <th key={r.repo.id} scope="col" className="p-4 align-top font-normal">
+              <th key={r.repo.id} scope="col" className="p-6 align-top font-normal">
                 <p className="font-bold">{r.repo.fullName}</p>
               </th>
             ))}
@@ -54,9 +54,9 @@ export function CompareTable({ items }: { items: ScoredRepo[] }) {
             const best = found && found.size < items.length ? found : undefined;
             return (
               <tr key={row.label} className="border-b border-line last:border-0">
-                <th scope="row" className="p-4 text-muted">{row.label}</th>
+                <th scope="row" className="p-6 text-muted">{row.label}</th>
                 {items.map((r, i) => (
-                  <td key={r.repo.id} className={`p-4 ${best?.has(i) ? "best" : ""}`}>
+                  <td key={r.repo.id} className={`p-6 ${best?.has(i) ? "best" : ""}`}>
                     {row.show(r)}
                     {best?.has(i) && <span className="ml-2 text-xs font-bold text-field">best</span>}
                   </td>

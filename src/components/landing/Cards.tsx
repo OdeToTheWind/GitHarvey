@@ -16,12 +16,12 @@ export function Cards({ id, heading, intro, items, columns = 3 }: {
   columns?: 3 | 4;
 }) {
   return (
-    <section aria-labelledby={id} className="mt-16">
+    <section aria-labelledby={id} className="mt-28 sm:mt-40">
       <h2 id={id} className="text-2xl sm:text-3xl">{heading}</h2>
-      {intro && <p className="mt-2 max-w-3xl text-muted">{intro}</p>}
-      <ul className={`mt-6 grid gap-5 sm:grid-cols-2 ${columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
+      {intro && <p className="mt-4 max-w-3xl text-muted">{intro}</p>}
+      <ul className={`mt-12 grid gap-8 sm:grid-cols-2 ${columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
         {items.map((item) => (
-          <li key={item.title} className="glow-card flex flex-col gap-3 p-5">
+          <li key={item.title} className="glow-card flex flex-col gap-4 p-8">
             <Cat name={item.icon} size={88} />
             <h3 className="text-lg font-bold">{item.title}</h3>
             <p className="text-muted">{item.text}</p>

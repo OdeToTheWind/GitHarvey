@@ -14,10 +14,10 @@ export default async function FinderPage({ searchParams }: Props) {
   if (!decoded.ok) redirect("/start");
   const { prefs } = decoded;
   return (
-    <main className="w-full px-5 sm:px-8 lg:px-12 pb-16">
+    <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
       <Cat name="search" size={88} />
       <h1 className="text-4xl">Results for “{prefs.topic}”</h1>
-      <p className="mt-2 text-muted">
+      <p className="mt-4 text-muted">
         <Link href="/start" className="text-neon underline underline-offset-4">Change answers</Link>
       </p>
       <ResultsSection prefs={prefs} />

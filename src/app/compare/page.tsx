@@ -47,7 +47,7 @@ export default async function ComparePage({ searchParams }: Props) {
   const loaded = parsed.ok && token ? await loadAll(parsed.names, token, scoring) : null;
 
   return (
-    <main className="w-full px-5 pb-16 sm:px-8 lg:px-12">
+    <main className="w-full px-5 pb-24 sm:pb-32 sm:px-8 lg:px-12">
       <Cat name="compare" size={88} />
       <h1 className="text-4xl">Compare repos</h1>
       <CompareForm initial={raw} scoring={scoring} />
@@ -61,7 +61,7 @@ export default async function ComparePage({ searchParams }: Props) {
       {parsed.ok && state.configured && !token && <NeedToken next={compareHref(parsed.names, scoring)} />}
       {loaded?.failure && <ErrorBanner info={loaded.failure} />}
       {loaded && !loaded.failure && (
-        <div className="mt-8 space-y-4">
+        <div className="mt-12 space-y-6">
           {loaded.items.length >= 2 ? (
             <>
               <p className="text-sm text-muted">{verdict(loaded.items)}</p>

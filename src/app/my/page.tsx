@@ -15,14 +15,14 @@ export default async function MyPage({ searchParams }: Props) {
   const decoded = decodePrefs(await searchParams);
   if (!decoded.ok) {
     return (
-      <main className="w-full px-5 sm:px-8 lg:px-12 pb-16">
+      <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
         <MyRedirect />
       </main>
     );
   }
   const { prefs } = decoded;
   return (
-    <main className="w-full px-5 sm:px-8 lg:px-12 pb-16">
+    <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
       <Cat name="ranking" size={88} />
       <h1 className="text-4xl">Your page</h1>
       <p className="mt-3 max-w-xl text-muted">

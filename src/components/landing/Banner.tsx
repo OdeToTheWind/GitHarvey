@@ -16,7 +16,7 @@ const SCENE: { icon: CatName; caption: string }[] = [
 export function Banner() {
   return (
     <section aria-label="GitHarvey" className="glow-card overflow-hidden">
-      <div className="px-5 pt-8 sm:px-8 lg:px-12">
+      <div className="px-5 pt-12 sm:px-8 sm:pt-16 lg:px-12">
         <p className="brand-name text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl" aria-label={BRAND}>
           {BRAND.split("").map((letter, i) => (
             <span key={i} aria-hidden="true" className="brand-letter" style={{ animationDelay: `${i * 0.09}s` }}>
@@ -25,11 +25,11 @@ export function Banner() {
           ))}
           <span aria-hidden="true" className="brand-cursor text-neon">_</span>
         </p>
-        <p className="brand-tagline mt-2 text-muted">From a thousand repos to the right one.</p>
+        <p className="brand-tagline mt-4 text-muted">From a thousand repos to the right one.</p>
       </div>
       {/* Second row: the five steps, still until hovered, then they move in. */}
-      <div className="scene-row mt-6 border-t border-line px-5 py-8 sm:px-8">
-        <ul className="mx-auto flex max-w-5xl flex-wrap items-end justify-center gap-x-2 gap-y-6">
+      <div className="scene-row mt-10 border-t border-line px-5 py-12 sm:px-8">
+        <ul className="mx-auto flex max-w-5xl flex-wrap items-end justify-center gap-x-4 gap-y-8">
           {SCENE.map((item, i) => (
             <li key={item.caption} className="flex items-end">
               <span className="step flex flex-col items-center gap-1 px-3" style={{ animationDelay: `${i * 0.12}s` }}>

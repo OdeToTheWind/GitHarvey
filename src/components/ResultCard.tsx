@@ -39,26 +39,26 @@ export function ResultCard({ item, scoring, selected, canSelect, onToggle }: Pro
   }
 
   return (
-    <article className="glow-card p-5">
+    <article className="glow-card p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <a href={repo.url} rel="noopener noreferrer" className="font-bold underline-offset-4 hover:underline">
           {repo.fullName}
         </a>
         <HealthBadge item={shown} />
       </div>
-      {repo.description && <p className="mt-2 line-clamp-2 text-muted">{repo.description}</p>}
+      {repo.description && <p className="mt-3 line-clamp-2 text-muted">{repo.description}</p>}
       <p className="mt-2 text-sm text-muted">
         ★ {repo.stars.toLocaleString("en-US")}
         {repo.language ? ` · ${repo.language}` : ""} · {repo.license ?? "No license"} · pushed {ago(repo.pushedAt)}
       </p>
       {repo.topics.length > 0 && <p className="mt-2 text-xs text-muted">{repo.topics.slice(0, 4).join(" · ")}</p>}
-      <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
+      <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-muted">
         {shown.reasons.map((r) => (
           <li key={r}>{r}</li>
         ))}
       </ul>
       <ScoreBreakdown item={shown} />
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <label className="tap gap-2">
           <input type="checkbox" checked={selected} disabled={!selected && !canSelect} onChange={onToggle} />
           Compare

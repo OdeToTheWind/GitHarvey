@@ -38,7 +38,7 @@ export function AudienceStep({ draft, update }: StepProps) {
   return (
     <fieldset>
       <legend className="font-bold">Who are you?</legend>
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-4">
         {AUDIENCES.map((a) => (
           <Choice key={a} name="aud" label={AUDIENCE_LABEL[a]} checked={draft.audience === a} onChange={() => update({ audience: a })} />
         ))}
@@ -51,7 +51,7 @@ export function GoalStep({ draft, update }: StepProps) {
   return (
     <fieldset>
       <legend className="font-bold">What do you want to do?</legend>
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-4">
         {GOALS.map((g) => (
           <Choice key={g} name="goal" label={GOAL_LABEL[g]} checked={draft.goal === g} onChange={() => update({ goal: g })} />
         ))}
@@ -62,7 +62,7 @@ export function GoalStep({ draft, update }: StepProps) {
 
 export function TopicStep({ draft, update }: StepProps) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <div>
         <label htmlFor="topic" className="font-bold">What is it about? (required)</label>
         <input id="topic" value={draft.topic} maxLength={80} onChange={(e) => update({ topic: e.target.value })} placeholder="e.g. pdf parsing, state management" className="field-input mt-2" />
@@ -86,7 +86,7 @@ export function PriorityStep({ draft, update }: StepProps) {
   return (
     <fieldset>
       <legend className="font-bold">What matters most?</legend>
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-4 flex flex-wrap gap-4">
         {PRIORITIES.map((p) => (
           <label key={p} className={`tap gap-2 rounded-md border px-4 ${draft.priorities.includes(p) ? "border-neon" : "border-line"}`}>
             <input type="checkbox" checked={draft.priorities.includes(p)} onChange={() => toggle(p)} />

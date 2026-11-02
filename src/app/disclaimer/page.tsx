@@ -8,9 +8,9 @@ export const metadata: Metadata = { title: "Disclaimer" };
 export default function DisclaimerPage() {
   const repo = repoUrl();
   return (
-    <main className="w-full px-5 pb-16 sm:px-8 lg:px-12">
+    <main className="w-full px-5 pb-24 sm:pb-32 sm:px-8 lg:px-12">
       <h1 className="text-4xl">Disclaimer</h1>
-      <p className="mt-3 max-w-3xl text-muted">
+      <p className="mt-5 max-w-3xl text-muted">
         How GitHarvey uses the GitHub API, and what its results do and do not mean.
       </p>
       <Cards id="disclaimer-h" heading="What you should know" items={DISCLAIMER_SECTIONS} columns={4} />

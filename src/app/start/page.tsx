@@ -15,9 +15,9 @@ export default async function StartPage({ searchParams }: Props) {
   const next = safeNext(Array.isArray(raw) ? raw[0] : raw);
   const signedIn = await hasToken();
   return (
-    <main className="w-full px-5 sm:px-8 lg:px-12 pb-16">
+    <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
       <h1 className="text-4xl">Get started</h1>
-      <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="mt-12 grid gap-14 lg:grid-cols-2 lg:gap-24">
       <section aria-labelledby="token-h">
         <Cat name="token" size={88} />
         <h2 id="token-h" className="text-2xl">1. Add a read-only token</h2>

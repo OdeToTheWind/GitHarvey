@@ -7,8 +7,8 @@ const link = "tap underline-offset-4 hover:underline";
 export function Footer() {
   const repo = repoUrl();
   return (
-    <footer className="w-full border-t border-line px-5 py-10 text-sm text-muted sm:px-8 lg:px-12">
-      <div className="grid gap-10 md:grid-cols-3">
+    <footer className="w-full border-t border-line px-5 py-16 text-sm text-muted sm:px-8 lg:px-12">
+      <div className="grid gap-12 md:grid-cols-3 md:gap-16">
         <div>
           <Cat name="search" size={72} />
           <p className="mt-2 font-bold text-ink">GitHarvey</p>
@@ -16,7 +16,7 @@ export function Footer() {
         </div>
         <nav aria-label="Explore">
           <p className="font-bold text-ink">Explore</p>
-          <ul className="mt-2">
+          <ul className="mt-4 space-y-1">
             <li><Link href="/start" className={link}>Get started</Link></li>
             <li><Link href="/compare" className={link}>Compare repos</Link></li>
             <li><Link href="/privacy" className={link}>Privacy</Link></li>
@@ -25,7 +25,7 @@ export function Footer() {
         </nav>
         <nav aria-label="Open source">
           <p className="font-bold text-ink">Open source</p>
-          <ul className="mt-2">
+          <ul className="mt-4 space-y-1">
             {repo ? (
               <>
                 <li><a href={repo} rel="noopener noreferrer" className={link}>View the source on GitHub</a></li>
@@ -38,7 +38,7 @@ export function Footer() {
           </ul>
         </nav>
       </div>
-      <div className="mt-10 space-y-1 border-t border-line pt-6">
+      <div className="mt-14 space-y-2 border-t border-line pt-8">
         <p>Free and open source (MIT). No database, no analytics, no ads.</p>
         <p>GitHarvey is not affiliated with GitHub. Repo data comes from the public GitHub API. <Link href="/disclaimer" className="underline underline-offset-4">Read the disclaimer</Link>.</p>
         <p>Fonts: CamingoCode by Jan Fromm (CC BY-ND 3.0) and Catgirl System Font.</p>

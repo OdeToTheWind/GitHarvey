@@ -5,9 +5,9 @@ export const metadata: Metadata = { title: "Privacy" };
 
 export default function PrivacyPage() {
   return (
-    <main className="w-full px-5 pb-16 sm:px-8 lg:px-12">
+    <main className="w-full px-5 pb-24 sm:pb-32 sm:px-8 lg:px-12">
       <h1 className="text-4xl">Privacy</h1>
-      <p className="mt-3 max-w-3xl text-muted">Short and plain: here is what GitHarvey does with your data.</p>
+      <p className="mt-5 max-w-3xl text-muted">Short and plain: here is what GitHarvey does with your data.</p>
       <Cards
         id="privacy-h"
         heading="Our promises"

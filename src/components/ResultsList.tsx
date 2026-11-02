@@ -44,10 +44,10 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
   if (results.length === 0) return <EmptyState prefs={prefs} />;
   return (
     <>
-      <p className="mt-6 text-sm text-muted">
+      <p className="mt-10 text-sm text-muted">
         Showing {Math.min(visible, results.length)} of {results.length} repos, ranked by health. Each score shows its working under “Why this score”.
       </p>
-      <div className="mt-3 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-6 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         {results.slice(0, visible).map((item) => (
           <ResultCard
             key={item.repo.id}
@@ -60,7 +60,7 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
         ))}
       </div>
       {visible < results.length && (
-        <div className="mt-6 flex justify-center">
+        <div className="mt-12 flex justify-center">
           <button type="button" className="btn-secondary" onClick={() => setVisible((v) => v + PAGE)}>
             Show {Math.min(PAGE, results.length - visible)} more
           </button>
