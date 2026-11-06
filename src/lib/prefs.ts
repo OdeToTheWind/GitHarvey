@@ -1,6 +1,11 @@
 import { z } from "zod";
 import type { Audience, Preferences, Priority, ScoringPrefs } from "@/types";
 
+// This file also runs in the browser, where our Content Security Policy forbids eval. Zod would otherwise
+// probe for eval support (new Function), and the browser logs that probe as a blocked-script error.
+// "jitless" skips the probe. It only changes how validation is compiled, never the result.
+z.config({ jitless: true });
+
 export const AUDIENCES = ["beginner", "developer", "security", "founder"] as const;
 export const GOALS = ["learn", "build", "compare", "stay-updated"] as const;
 export const PRIORITIES = [

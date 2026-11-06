@@ -104,7 +104,7 @@ describe("GET /api/auth/github/callback", () => {
     await begin();
     const fetchFn = mockExchange({ access_token: ACCESS_TOKEN });
     const res = await get("/api/auth/github/callback?code=abcdefghij1234&state=forged", callback);
-    expect(failure(res)).toBe("/start?error=oauth");
+    expect(failure(res)).toBe("/start?error=oauth-state");
     expect(fetchFn).not.toHaveBeenCalled();
     expect(jar.has("rf_session")).toBe(false);
   });
@@ -115,23 +115,23 @@ describe("GET /api/auth/github/callback", () => {
     await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(state)}`, callback);
     jar.delete("rf_session");
     const again = await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(state)}`, callback);
-    expect(failure(again)).toBe("/start?error=oauth");
+    expect(failure(again)).toBe("/start?error=oauth-state");
     expect(jar.has("rf_session")).toBe(false);
   });
   it("rejects a callback with no state cookie, a bad code, or a failed exchange", async () => {
-    expect(failure(await get("/api/auth/github/callback?code=abcdefghij1234&state=x", callback))).toBe("/start?error=oauth");
+    expect(failure(await get("/api/auth/github/callback?code=abcdefghij1234&state=x", callback))).toBe("/start?error=oauth-state");
     const { state } = await begin();
-    expect(failure(await get(`/api/auth/github/callback?code=!!&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth");
+    expect(failure(await get(`/api/auth/github/callback?code=!!&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth-state");
     const second = await begin();
-    mockExchange({ error: "bad_verification_code" });
-    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(second.state)}`, callback))).toBe("/start?error=oauth");
+    mockExchange({ error: "bad_client_credentials" });
+    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(second.state)}`, callback))).toBe("/start?error=oauth-exchange");
     expect(jar.has("rf_session")).toBe(false);
   });
   it("refuses a token that carries permissions, like a pasted classic token", async () => {
     const { state } = await begin();
     mockExchange({ access_token: ACCESS_TOKEN });
     validateToken.mockResolvedValue({ valid: true, scopes: ["repo"], rate: { remaining: 1, resetAt: null } });
-    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth");
+    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth-scope");
     expect(jar.has("rf_session")).toBe(false);
   });
   it("ignores a next address that leaves the site", async () => {
@@ -141,6 +141,22 @@ describe("GET /api/auth/github/callback", () => {
     expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(state)}`, callback))).toBe("/start");
   });
 });
+
+describe("sign-in problems say which step failed", () => {
+  it("tells apart a cancelled sign-in, a refused token and GitHub being unreachable", async () => {
+    const { state } = await begin();
+    expect(failure0(await get(`/api/auth/github/callback?error=access_denied&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth-denied");
+    const next = await begin();
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => new Response(JSON.stringify({ access_token: ACCESS_TOKEN }))));
+    validateToken.mockResolvedValue({ valid: false, scopes: [], rate: { remaining: null, resetAt: null } });
+    expect(failure0(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(next.state)}`, callback))).toBe("/start?error=oauth-github");
+    const last = await begin();
+    validateToken.mockRejectedValue(new Error("network"));
+    expect(failure0(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(last.state)}`, callback))).toBe("/start?error=oauth-github");
+  });
+});
+
+const failure0 = (res: Response) => new URL(res.headers.get("location") ?? "").pathname + new URL(res.headers.get("location") ?? "").search;
 
 describe("oauth helpers", () => {
   it("compares states without accepting empty or different values", () => {
