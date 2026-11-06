@@ -19,15 +19,15 @@ describe("parseRepoUrl", () => {
 describe("site addresses and crawler rules", () => {
   it("builds the site address without a trailing slash, with a local default", async () => {
     const { siteUrl } = await import("@/lib/site");
-    const before = process.env.NEXT_PUBLIC_SITE_URL;
-    process.env.NEXT_PUBLIC_SITE_URL = "https://githarvey.example/";
+    const before = process.env.SITE_URL;
+    process.env.SITE_URL = "https://githarvey.example/";
     expect(siteUrl()).toBe("https://githarvey.example");
-    delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.SITE_URL;
     expect(siteUrl()).toBe("http://localhost:3000");
-    if (before !== undefined) process.env.NEXT_PUBLIC_SITE_URL = before;
+    if (before !== undefined) process.env.SITE_URL = before;
   });
   it("lists only public pages in the sitemap and keeps token pages out of search", async () => {
-    process.env.NEXT_PUBLIC_SITE_URL = "https://githarvey.example";
+    process.env.SITE_URL = "https://githarvey.example";
     const robots = (await import("@/app/robots")).default();
     const sitemap = (await import("@/app/sitemap")).default();
     expect(sitemap.map((s) => s.url)).toEqual([
@@ -39,6 +39,6 @@ describe("site addresses and crawler rules", () => {
     const rule = Array.isArray(robots.rules) ? robots.rules[0] : robots.rules;
     expect(rule?.disallow).toEqual(expect.arrayContaining(["/api/", "/finder", "/compare", "/my", "/repo/", "/saved"]));
     expect(robots.sitemap).toBe("https://githarvey.example/sitemap.xml");
-    delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.SITE_URL;
   });
 });

@@ -28,7 +28,7 @@ export default defineConfig({
         GITHARVEY_GITHUB_OAUTH: `http://127.0.0.1:${GITHUB_PORT}`,
         GITHUB_CLIENT_ID: "e2e-client-id",
         GITHUB_CLIENT_SECRET: "e2e-client-secret",
-        NEXT_PUBLIC_REPO_URL: "https://github.com/example/githarvey",
+        REPO_URL: "https://github.com/example/githarvey",
         NEXT_TELEMETRY_DISABLED: "1",
       },
       url: `http://localhost:${APP_PORT}`,

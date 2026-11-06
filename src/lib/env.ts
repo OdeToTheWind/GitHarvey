@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   SESSION_SECRET: z.string().min(32),
-  NEXT_PUBLIC_SITE_URL: z.url().optional(),
+  SITE_URL: z.url().optional(),
 });
 
 type Env = z.infer<typeof envSchema>;
@@ -30,7 +30,7 @@ export function getOAuthConfig(): OAuthConfig | null {
 export function getEnv(): Env {
   const parsed = envSchema.safeParse({
     SESSION_SECRET: process.env.SESSION_SECRET || undefined,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || undefined,
+    SITE_URL: process.env.SITE_URL || undefined,
   });
   if (!parsed.success) {
     const keys = Array.from(new Set(parsed.error.issues.map((issue) => String(issue.path[0]))));

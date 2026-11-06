@@ -73,8 +73,8 @@ Set these in `.env.local` (or in your Vercel project). See [docs/self-hosting.md
 | `SESSION_SECRET` | yes | 32 or more characters. Encrypts the sign-in cookie |
 | `GITHUB_CLIENT_ID` | yes | Client ID of your GitHub OAuth app. Set it in `.env.local`, or in Vercel under Project, Settings, Environment Variables |
 | `GITHUB_CLIENT_SECRET` | yes | The OAuth app's client secret. Server only: never prefix it with `NEXT_PUBLIC_` |
-| `NEXT_PUBLIC_SITE_URL` | no | Your site address, for the social preview image |
-| `NEXT_PUBLIC_REPO_URL` | no | Your repo address, for the GitHub link in the navbar and the footer links. Hidden when unset |
+| `SITE_URL` | no | Your site address, for the social preview image |
+| `REPO_URL` | no | Your repo address, for the GitHub link in the navbar and the footer links. Hidden when unset |
 
 ## Scripts
 
@@ -116,7 +116,7 @@ Details: [docs/token-safety.md](docs/token-safety.md).
 
 ## Deploy your own
 
-Fork the repo and import it into Vercel, set `SESSION_SECRET`, `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (and `NEXT_PUBLIC_REPO_URL` for the navbar and footer links), and deploy. Step by step, with a checklist: [docs/self-hosting.md](docs/self-hosting.md).
+Fork the repo and import it into Vercel, set `SESSION_SECRET`, `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (and `REPO_URL` for the navbar and footer links), and deploy. Step by step, with a checklist: [docs/self-hosting.md](docs/self-hosting.md).
 
 ## How scoring works
 

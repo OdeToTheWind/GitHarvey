@@ -11,8 +11,8 @@ GitHarvey is a Next.js app with no database. The free Vercel Hobby plan is enoug
 | `SESSION_SECRET` | yes | 32+ characters. Generate with `openssl rand -base64 32` |
 | `GITHUB_CLIENT_ID` | yes | Client ID of your GitHub OAuth app. See [Sign in with GitHub](#sign-in-with-github-required) |
 | `GITHUB_CLIENT_SECRET` | yes | The OAuth app's client secret. Server only: never prefix it with `NEXT_PUBLIC_` |
-| `NEXT_PUBLIC_SITE_URL` | no | Your site URL. Used for the social preview image and absolute links |
-| `NEXT_PUBLIC_REPO_URL` | no | Your public repo, such as `https://github.com/you/githarvey`. Adds the GitHub link in the navbar and the "View the source", "Report an issue" and "Host your own" links in the footer. Hidden when unset |
+| `SITE_URL` | no | Your site URL. Used for the social preview image and absolute links |
+| `REPO_URL` | no | Your public repo, such as `https://github.com/you/githarvey`. Adds the GitHub link in the navbar and the "View the source", "Report an issue" and "Host your own" links in the footer. Hidden when unset |
 
 4. Deploy. Your site appears at `https://<project>.vercel.app`.
 
@@ -31,7 +31,7 @@ GitHarvey requests no scope, so the token can only read public information. Your
 
 ## Search engines
 
-`/robots.txt` and `/sitemap.xml` are generated from `NEXT_PUBLIC_SITE_URL`. Only the public pages (home, start, privacy, disclaimer) are listed. Results, compare, repo details, saved and your page are marked `noindex`.
+`/robots.txt` and `/sitemap.xml` are generated from `SITE_URL`. Only the public pages (home, start, privacy, disclaimer) are listed. Results, compare, repo details, saved and your page are marked `noindex`.
 
 ## Run locally
 
@@ -50,8 +50,8 @@ npm run lint && npm run typecheck && npm test && npm run build
 ## Deploy checklist
 
 - [ ] `SESSION_SECRET` set in Vercel (32+ characters)
-- [ ] `NEXT_PUBLIC_SITE_URL` set to your real URL, so shared links show the preview image
-- [ ] `NEXT_PUBLIC_REPO_URL` set, so the navbar and footer link to your repo
+- [ ] `SITE_URL` set to your real URL, so shared links show the preview image
+- [ ] `REPO_URL` set, so the navbar and footer link to your repo
 - [ ] `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` set in Vercel, and the callback URL `https://<your-domain>/api/auth/github/callback` registered on the OAuth app
 - [ ] Sign in with GitHub once, then run a search, a comparison and "Expand" on a result
 - [ ] Update the name in `LICENSE` to your own

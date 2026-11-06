@@ -4,7 +4,7 @@ export const ABOUT =
   "GitHarvey helps you find the right GitHub repo for your goal. Tell it who you are and what you need, and get repos scored for health, with the reasons shown, and compared side by side. Free, open source, no database. Sign in with GitHub for read-only access to public data, or self-host on Vercel.";
 
 /**
- * The public GitHub repo, set with NEXT_PUBLIC_REPO_URL (for example
+ * The public GitHub repo, set with REPO_URL (for example
  * https://github.com/yourname/githarvey). Anything that is not a github.com
  * https URL is ignored, so the footer never links somewhere unexpected.
  */
@@ -19,9 +19,9 @@ export function parseRepoUrl(value: string | undefined): string | null {
   }
 }
 
-/** The site's own address, from NEXT_PUBLIC_SITE_URL (localhost when unset). No trailing slash. */
+/** The site's own address, from SITE_URL (localhost when unset). No trailing slash. */
 export function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  return (process.env.SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 }
 
 /** Pages worth indexing. Results, compare, details, saved and your page stay out: they need you to be signed in. */
@@ -31,5 +31,5 @@ export const PUBLIC_PATHS = ["/", "/start", "/privacy", "/disclaimer"] as const;
 export const PRIVATE_PATHS = ["/api/", "/finder", "/compare", "/my", "/repo/", "/saved"] as const;
 
 export function repoUrl(): string | null {
-  return parseRepoUrl(process.env.NEXT_PUBLIC_REPO_URL);
+  return parseRepoUrl(process.env.REPO_URL);
 }
