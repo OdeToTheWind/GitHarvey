@@ -1,6 +1,6 @@
 import type { Preferences } from "@/types";
 
-const LANGUAGE_NAMES: Record<string, string> = {
+export const LANGUAGE_NAMES: Record<string, string> = {
   javascript: "JavaScript",
   typescript: "TypeScript",
   python: "Python",

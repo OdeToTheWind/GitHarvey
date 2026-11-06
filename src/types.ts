@@ -29,6 +29,7 @@ export interface RepoSummary {
   topics: string[];
   archived: boolean;
   homepage: string | null;
+  sizeKb: number; // repository size on GitHub, a rough guide to how big the codebase is
 }
 
 export interface RepoHealth {
@@ -45,8 +46,16 @@ export interface ScoreLine {
   max: number;
 }
 
-/** What scoring needs to know about the visitor. */
-export type ScoringPrefs = Pick<Preferences, "audience" | "priorities"> & { goal?: Goal };
+/** How much each signal counts. A set sums to 1 (see profiles.ts). */
+export interface Weights {
+  recency: number;
+  license: number;
+  docs: number;
+  popularity: number;
+}
+
+/** What scoring needs to know about the visitor. `weights` is set only when they tune the score by hand. */
+export type ScoringPrefs = Pick<Preferences, "audience" | "priorities"> & { goal?: Goal; weights?: Weights };
 
 export interface ScoredRepo {
   repo: RepoSummary;
@@ -55,6 +64,20 @@ export interface ScoredRepo {
   badge: "green" | "yellow" | "red";
   reasons: string[];
   breakdown: ScoreLine[];
+}
+
+/** Extra facts loaded on demand (Expand, detail page, compare). Information only: never part of the score. */
+export interface RepoExtras {
+  mergeSpeed: { medianDays: number; sampled: number } | null;
+  contributors: number | null;
+  weeklyCommits: number[] | null; // last 52 weeks, oldest first
+  goodFirstIssues: number | null;
+  dependencies: { count: number; file: string } | null;
+}
+
+export interface RepoDetails {
+  health: RepoHealth;
+  extras: RepoExtras;
 }
 
 export interface RateInfo {

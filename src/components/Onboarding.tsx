@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { decodePrefs, defaultPriorities, encodePrefs } from "@/lib/prefs";
+import { decodePrefs, defaultPriorities, EXAMPLE_PREFS, encodePrefs } from "@/lib/prefs";
 import { setPrefs } from "@/lib/storage";
 import type { Preferences } from "@/types";
 import { AudienceStep, GoalStep, PriorityStep, TopicStep } from "./OnboardingSteps";
@@ -38,9 +38,7 @@ export function Onboarding() {
     setStep((s) => s + 1);
   }
 
-  function finish(event: React.FormEvent) {
-    event.preventDefault();
-    const prefs = { ...draft, topic: draft.topic.trim() };
+  function go(prefs: Preferences) {
     const params = encodePrefs(prefs);
     if (!decodePrefs(params).ok) {
       setError("Check your answers and try again.");
@@ -50,6 +48,11 @@ export function Onboarding() {
     router.push(`/finder?${params.toString()}`);
   }
 
+  function finish(event: React.FormEvent) {
+    event.preventDefault();
+    go({ ...draft, topic: draft.topic.trim() });
+  }
+
   const Step = STEPS[step] ?? AudienceStep;
   const last = step === STEPS.length - 1;
   return (
@@ -57,13 +60,14 @@ export function Onboarding() {
       <p className="text-sm text-muted" aria-live="polite">Step {step + 1} of {STEPS.length}</p>
       <Step draft={draft} update={update} />
       {error && <p role="alert" className="text-clay">{error}</p>}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         {step > 0 && <button type="button" className="btn-secondary" onClick={() => setStep(step - 1)}>Back</button>}
         {last ? (
           <button type="submit" className="btn-primary">Find repos</button>
         ) : (
           <button type="button" className="btn-primary" onClick={next}>Next</button>
         )}
+        {step === 0 && <button type="button" className="btn-secondary" onClick={() => go(EXAMPLE_PREFS)}>Try an example</button>}
       </div>
     </form>
   );

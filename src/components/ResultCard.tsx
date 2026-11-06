@@ -1,11 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import { getJson } from "@/lib/client-api";
+import { alternativesHref } from "@/lib/alternatives";
 import { ago } from "@/lib/format";
+import { repoHref } from "@/lib/links";
 import { scoreRepo } from "@/lib/score";
-import type { RepoHealth, ScoredRepo, ScoringPrefs } from "@/types";
+import { useRepoDetails } from "@/lib/use-details";
+import type { ScoredRepo, ScoringPrefs } from "@/types";
 import { HealthBadge } from "./HealthBadge";
+import { InsightsPanel } from "./InsightsPanel";
+import { RepoTags } from "./RepoTags";
+import { SaveButton } from "./SaveButton";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 
 interface Props {
@@ -17,35 +23,34 @@ interface Props {
 }
 
 export function ResultCard({ item, scoring, selected, canSelect, onToggle }: Props) {
-  const [health, setHealth] = useState<RepoHealth | null>(null);
+  const { details, busy, failed, load } = useRepoDetails(item.repo.fullName);
   const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
 
-  const shown = health ? scoreRepo(item.repo, health, scoring) : item;
+  const shown = details ? scoreRepo(item.repo, details.health, scoring) : item;
   const { repo } = shown;
+  const lookAround = repo.archived || shown.badge === "red";
 
-  async function expand() {
+  function expand() {
     setOpen((o) => !o);
-    if (health || busy) return;
-    setBusy(true);
-    setFailed(false);
-    try {
-      setHealth(await getJson<RepoHealth>(`/api/release?name=${encodeURIComponent(repo.fullName)}`));
-    } catch {
-      setFailed(true);
-    }
-    setBusy(false);
+    void load();
   }
 
   return (
     <article className="glow-card p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <a href={repo.url} rel="noopener noreferrer" className="font-bold underline-offset-4 hover:underline">
-          {repo.fullName}
-        </a>
+        <h2 className="text-base">
+          <a href={repo.url} rel="noopener noreferrer" className="underline-offset-4 hover:underline">
+            {repo.fullName}
+          </a>
+        </h2>
         <HealthBadge item={shown} />
       </div>
+      <RepoTags repo={repo} />
+      {lookAround && (
+        <p className="mt-2 text-sm">
+          <Link href={alternativesHref(repo, scoring)} className="tap text-neon underline underline-offset-4">Find alternatives</Link>
+        </p>
+      )}
       {repo.description && <p className="mt-3 line-clamp-2 text-muted">{repo.description}</p>}
       <p className="mt-2 text-sm text-muted">
         ★ {repo.stars.toLocaleString("en-US")}
@@ -63,14 +68,22 @@ export function ResultCard({ item, scoring, selected, canSelect, onToggle }: Pro
           <input type="checkbox" checked={selected} disabled={!selected && !canSelect} onChange={onToggle} />
           Compare
         </label>
-        <button type="button" onClick={expand} aria-expanded={open} className="btn-secondary">
-          {open ? "Hide release info" : "Expand"}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <SaveButton fullName={repo.fullName} />
+          <button type="button" onClick={expand} aria-expanded={open} className="btn-secondary">
+            {open ? "Hide details" : "Expand"}
+          </button>
+        </div>
       </div>
       {open && (
-        <p className="mt-3 text-sm text-muted" aria-live="polite">
-          {busy ? "Loading…" : failed ? "Could not load release info." : `Last release: ${ago(health?.lastReleaseAt ?? null)}. The score now includes it.`}
-        </p>
+        <div aria-live="polite">
+          {busy && <p className="mt-3 text-sm text-muted">Loading…</p>}
+          {failed && <p className="mt-3 text-sm text-clay">Could not load the details. Try again.</p>}
+          {details && <InsightsPanel item={shown} extras={details.extras} />}
+          <p className="mt-4 text-sm">
+            <Link href={repoHref(repo.fullName, scoring)} className="tap text-neon underline underline-offset-4">Open details page</Link>
+          </p>
+        </div>
       )}
     </article>
   );

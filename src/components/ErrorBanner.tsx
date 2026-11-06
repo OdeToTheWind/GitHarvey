@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { ErrorInfo } from "@/lib/errors";
-import { RemoveTokenButton } from "./RemoveTokenButton";
+import { SignInLink } from "./SignInLink";
+import { SignOutButton } from "./SignOutButton";
 
 export function ErrorBanner({ info }: { info: ErrorInfo }) {
   return (
@@ -11,8 +11,8 @@ export function ErrorBanner({ info }: { info: ErrorInfo }) {
       )}
       {info.badToken && (
         <div className="mt-4 flex flex-wrap gap-3">
-          <RemoveTokenButton />
-          <Link href="/start" className="btn-primary">Add a token</Link>
+          <SignOutButton />
+          <SignInLink />
         </div>
       )}
     </div>

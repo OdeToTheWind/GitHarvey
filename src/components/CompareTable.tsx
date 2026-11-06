@@ -1,42 +1,12 @@
-import { bestIndexes, pushedTimes, releaseTimes } from "@/lib/compare";
-import { ago } from "@/lib/format";
+import { COMPARE_ROWS, type Extras } from "@/lib/compare-rows";
 import type { ScoredRepo } from "@/types";
 import { HealthBadge } from "./HealthBadge";
 
-interface Row {
-  label: string;
-  show: (r: ScoredRepo) => React.ReactNode;
-  best?: (items: ScoredRepo[]) => Set<number>;
-}
-
-const num = (n: number) => n.toLocaleString("en-US");
-
-const ROWS: Row[] = [
-  { label: "Score", show: (r) => <HealthBadge item={r} />, best: (i) => bestIndexes(i.map((r) => r.score)) },
-  { label: "Description", show: (r) => r.repo.description ?? "None" },
-  { label: "Stars", show: (r) => num(r.repo.stars), best: (i) => bestIndexes(i.map((r) => r.repo.stars)) },
-  { label: "Forks", show: (r) => num(r.repo.forks), best: (i) => bestIndexes(i.map((r) => r.repo.forks)) },
-  { label: "Open issues", show: (r) => num(r.repo.openIssues) },
-  { label: "Language", show: (r) => r.repo.language ?? "Not set" },
-  { label: "License", show: (r) => r.repo.license ?? "None found" },
-  { label: "Last pushed", show: (r) => ago(r.repo.pushedAt), best: (i) => bestIndexes(pushedTimes(i)) },
-  { label: "Last release", show: (r) => ago(r.health.lastReleaseAt), best: (i) => bestIndexes(releaseTimes(i)) },
-  { label: "Topics", show: (r) => r.repo.topics.slice(0, 5).join(", ") || "None" },
-  { label: "Archived", show: (r) => (r.repo.archived ? "Yes" : "No") },
-  {
-    label: "Link",
-    show: (r) => (
-      <a href={r.repo.url} rel="noopener noreferrer" className="text-neon underline underline-offset-4">
-        GitHub
-      </a>
-    ),
-  },
-];
-
-export function CompareTable({ items }: { items: ScoredRepo[] }) {
+export function CompareTable({ items, extras = [] }: { items: ScoredRepo[]; extras?: Extras }) {
   return (
     <div className="glow-card overflow-x-auto">
       <table className="w-full min-w-[34rem] border-collapse text-left">
+        <caption className="sr-only">Side-by-side comparison of {items.map((r) => r.repo.fullName).join(", ")}</caption>
         <thead>
           <tr className="border-b border-line">
             <td className="p-6" />
@@ -48,8 +18,8 @@ export function CompareTable({ items }: { items: ScoredRepo[] }) {
           </tr>
         </thead>
         <tbody>
-          {ROWS.map((row) => {
-            const found = row.best?.(items);
+          {COMPARE_ROWS.map((row) => {
+            const found = row.best?.(items, extras);
             // A tie is not a win: mark a value only when it beats at least one other.
             const best = found && found.size < items.length ? found : undefined;
             return (
@@ -57,7 +27,13 @@ export function CompareTable({ items }: { items: ScoredRepo[] }) {
                 <th scope="row" className="p-6 text-muted">{row.label}</th>
                 {items.map((r, i) => (
                   <td key={r.repo.id} className={`p-6 ${best?.has(i) ? "best" : ""}`}>
-                    {row.show(r)}
+                    {row.kind === "badge" ? (
+                      <HealthBadge item={r} />
+                    ) : row.kind === "link" ? (
+                      <a href={r.repo.url} rel="noopener noreferrer" className="text-neon underline underline-offset-4">GitHub</a>
+                    ) : (
+                      row.text(r, extras[i] ?? null)
+                    )}
                     {best?.has(i) && <span className="ml-2 text-xs font-bold text-field">best</span>}
                   </td>
                 ))}

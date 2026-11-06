@@ -1,9 +1,9 @@
 import type { ScoredRepo } from "@/types";
 
 /** "Why this score": every signal with the points it added. */
-export function ScoreBreakdown({ item }: { item: ScoredRepo }) {
+export function ScoreBreakdown({ item, open = false }: { item: ScoredRepo; open?: boolean }) {
   return (
-    <details className="mt-3 text-sm">
+    <details className="mt-3 text-sm" open={open}>
       <summary className="tap cursor-pointer font-bold">Why this score</summary>
       <table className="mt-2 w-full border-collapse text-left">
         <caption className="sr-only">How the score of {item.repo.fullName} adds up</caption>

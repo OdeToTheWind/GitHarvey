@@ -34,6 +34,7 @@ yarn-error.log*
 # env files (never commit real values; .env.example is tracked)
 .env
 .env*.local
+.env*.example
 
 # vercel
 .vercel
@@ -45,3 +46,7 @@ next-env.d.ts
 # local docs
 CONTRIBUTING.md
 
+
+# browser tests
+/test-results/
+/playwright-report/

@@ -1,31 +1,13 @@
 import { decodePrefs, encodePrefs } from "./prefs";
+import { createLocalStore } from "./local-store";
 import type { Preferences } from "@/types";
 
 // Browser storage for NON-SECRET preferences only. The GitHub token never
 // goes here: it lives in the encrypted httpOnly cookie (see session.ts).
-const PREFS_KEY = "ghv_prefs";
-const listeners = new Set<() => void>();
+const store = createLocalStore("ghv_prefs");
 
-export function subscribe(listener: () => void): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
-}
-
-function area(): Storage | null {
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export function getPrefsRaw(): string | null {
-  try {
-    return area()?.getItem(PREFS_KEY) ?? null;
-  } catch {
-    return null;
-  }
-}
+export const subscribe = store.subscribe;
+export const getPrefsRaw = store.get;
 
 export function getPrefs(): Preferences | null {
   const raw = getPrefsRaw();
@@ -35,19 +17,9 @@ export function getPrefs(): Preferences | null {
 }
 
 export function setPrefs(prefs: Preferences): void {
-  try {
-    area()?.setItem(PREFS_KEY, encodePrefs(prefs).toString());
-  } catch {
-    // Blocked storage: the app still works, preferences just are not remembered.
-  }
-  listeners.forEach((fn) => fn());
+  store.set(encodePrefs(prefs).toString());
 }
 
 export function clearPrefs(): void {
-  try {
-    area()?.removeItem(PREFS_KEY);
-  } catch {
-    // ignore
-  }
-  listeners.forEach((fn) => fn());
+  store.remove();
 }

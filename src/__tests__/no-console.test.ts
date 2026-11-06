@@ -23,7 +23,7 @@ describe("log audit", () => {
 
   it("marks token-handling lib files server-only", () => {
     const root = path.resolve(__dirname, "../lib");
-    for (const name of ["github.ts", "github-errors.ts", "github-map.ts", "session.ts", "origin.ts", "ratelimit.ts", "cache.ts", "search.ts", "api.ts", "errors.ts"]) {
+    for (const name of ["github.ts", "github-errors.ts", "github-map.ts", "session.ts", "origin.ts", "ratelimit.ts", "cache.ts", "search.ts", "api.ts", "errors.ts", "oauth.ts", "oauth-state.ts"]) {
       const text = fs.readFileSync(path.join(root, name), "utf8");
       expect(text.startsWith('import "server-only";'), name).toBe(true);
     }

@@ -17,7 +17,7 @@ export function CompareForm({ initial, scoring }: { initial: string; scoring: Sc
       }}
     >
       <label htmlFor="repos" className="sr-only">Repos to compare, as owner/repo separated by commas</label>
-      <input id="repos" value={text} onChange={(e) => setText(e.target.value)} placeholder="owner/repo, owner/repo" className="field-input min-w-0 flex-1" />
+      <input id="repos" data-shortcut-focus value={text} onChange={(e) => setText(e.target.value)} placeholder="owner/repo, owner/repo" className="field-input min-w-0 flex-1" />
       <button type="submit" className="btn-primary">Compare</button>
     </form>
   );

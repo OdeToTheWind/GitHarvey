@@ -1,4 +1,5 @@
 import { AUDIENCES, GOALS, LANGUAGES, PRIORITIES } from "@/lib/prefs";
+import { TOPIC_STYLES, toggleStyle } from "@/lib/topic-styles";
 import type { Audience, Goal, Preferences, Priority } from "@/types";
 
 const AUDIENCE_LABEL: Record<Audience, string> = {
@@ -65,8 +66,21 @@ export function TopicStep({ draft, update }: StepProps) {
     <div className="space-y-8">
       <div>
         <label htmlFor="topic" className="font-bold">What is it about? (required)</label>
-        <input id="topic" value={draft.topic} maxLength={80} onChange={(e) => update({ topic: e.target.value })} placeholder="e.g. pdf parsing, state management" className="field-input mt-2" />
+        <input id="topic" data-shortcut-focus value={draft.topic} maxLength={80} onChange={(e) => update({ topic: e.target.value })} placeholder="e.g. pdf parsing, state management" className="field-input mt-2" />
       </div>
+      <fieldset>
+        <legend className="font-bold">Add a style (optional)</legend>
+        <div className="mt-3 flex flex-wrap gap-3">
+          {TOPIC_STYLES.map((style) => {
+            const on = draft.topic.toLowerCase().includes(style);
+            return (
+              <button key={style} type="button" aria-pressed={on} onClick={() => update({ topic: toggleStyle(draft.topic, style) })} className={`tap rounded-md border px-4 ${on ? "border-neon" : "border-line"}`}>
+                {style}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
       <div>
         <label htmlFor="lang" className="font-bold">Language (optional)</label>
         <select id="lang" value={draft.language ?? ""} onChange={(e) => update({ language: (e.target.value || undefined) as Preferences["language"] })} className="field-input mt-2">

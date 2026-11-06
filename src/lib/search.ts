@@ -1,10 +1,21 @@
 import "server-only";
-import type { Preferences, RateInfo, RepoHealth, ScoredRepo, ScoringPrefs } from "@/types";
-import { getLatestRelease, getRepo, searchRepos } from "./github";
+import type { Preferences, RateInfo, RepoDetails, RepoExtras, RepoHealth, RepoSummary, ScoredRepo, ScoringPrefs } from "@/types";
+import {
+  getContributorCount,
+  getGoodFirstIssueCount,
+  getLatestRelease,
+  getMergeSpeed,
+  getRepo,
+  getRootFile,
+  getWeeklyCommits,
+  orNull,
+  searchRepos,
+} from "./github";
+import { countPackageJson, countRequirements } from "./insights";
 import { buildSearchQuery, searchSort } from "./query";
 import { DEFAULT_SCORING, scoreRepo } from "./score";
 
-/** One GitHub call. Results are scored without release data; see loadRelease. */
+/** One GitHub call. Results are scored without release data; see loadDetails. */
 export async function runSearch(
   prefs: Preferences,
   token: string,
@@ -16,17 +27,44 @@ export async function runSearch(
   return { results, rate };
 }
 
-export async function loadRelease(fullName: string, token: string): Promise<RepoHealth> {
+async function loadRelease(fullName: string, token: string): Promise<RepoHealth> {
   const { lastReleaseAt } = await getLatestRelease(fullName, token);
   return { lastReleaseAt, checked: true };
 }
 
-/** Fetches a repo plus its latest release and scores it. */
+/** Top-level dependency count for the two manifests we can read cheaply. Approximate by design. */
+async function loadDependencies(repo: RepoSummary, token: string): Promise<RepoExtras["dependencies"]> {
+  const file = repo.language === "Python" ? "requirements.txt" : repo.language === "JavaScript" || repo.language === "TypeScript" ? "package.json" : null;
+  if (!file) return null;
+  const text = await getRootFile(repo.fullName, file, token);
+  if (text === null) return null;
+  const count = file === "package.json" ? countPackageJson(text) : countRequirements(text);
+  return count === null ? null : { count, file };
+}
+
+/**
+ * Release info plus the extra facts. Each extra is optional: if GitHub cannot answer one, it shows as
+ * "not available" and the rest still load. A rejected token or a rate limit still stops everything.
+ */
+export async function loadDetails(fullName: string, token: string): Promise<RepoDetails> {
+  const { repo } = await getRepo(fullName, token);
+  const [health, mergeSpeed, contributors, weeklyCommits, goodFirstIssues, dependencies] = await Promise.all([
+    loadRelease(fullName, token),
+    orNull(() => getMergeSpeed(fullName, token)),
+    orNull(() => getContributorCount(fullName, token)),
+    orNull(() => getWeeklyCommits(fullName, token)),
+    orNull(() => getGoodFirstIssueCount(fullName, token), true),
+    orNull(() => loadDependencies(repo, token)),
+  ]);
+  return { health, extras: { mergeSpeed, contributors, weeklyCommits, goodFirstIssues, dependencies } };
+}
+
+/** A repo, its details and its score, for the compare and detail pages. */
 export async function loadScoredRepo(
   fullName: string,
   token: string,
   prefs: ScoringPrefs = DEFAULT_SCORING,
-): Promise<ScoredRepo> {
-  const [{ repo }, health] = await Promise.all([getRepo(fullName, token), loadRelease(fullName, token)]);
-  return scoreRepo(repo, health, prefs);
+): Promise<{ scored: ScoredRepo; extras: RepoExtras }> {
+  const [{ repo }, { health, extras }] = await Promise.all([getRepo(fullName, token), loadDetails(fullName, token)]);
+  return { scored: scoreRepo(repo, health, prefs), extras };
 }

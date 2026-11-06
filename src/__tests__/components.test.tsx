@@ -9,7 +9,7 @@ vi.mock("next/link", () => ({
   default: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => createElement("a", { href, ...rest }, children),
 }));
 
-vi.mock("@/lib/use-stored", () => ({ useStoredPrefs: () => null }));
+vi.mock("@/lib/use-stored", () => ({ useStoredPrefs: () => null, useShortlist: () => [] }));
 
 import { CompareTable } from "@/components/CompareTable";
 import { ResultCard } from "@/components/ResultCard";
@@ -20,7 +20,7 @@ const repo = (n: number, extra: Partial<RepoSummary> = {}): RepoSummary => ({
   id: n, fullName: `owner/repo${n}`, description: `Repo number ${n}`, url: `https://github.com/owner/repo${n}`,
   stars: 1000 * n, forks: 5, openIssues: 3, language: "Go", license: "MIT",
   pushedAt: new Date(NOW - 5 * 86400000).toISOString(), createdAt: "2020-01-01T00:00:00Z",
-  topics: ["a"], archived: false, homepage: null, ...extra,
+  topics: ["a"], archived: false, homepage: null, sizeKb: 800, ...extra,
 });
 const prefs: Preferences = { audience: "developer", goal: "build", topic: "pdf", priorities: [] };
 const scored = (n: number, extra: Partial<RepoSummary> = {}) => scoreRepo(repo(n, extra), { lastReleaseAt: null, checked: false }, prefs);
@@ -93,6 +93,6 @@ describe("Header GitHub link", () => {
     const withRepo = renderToStaticMarkup(<Header hasToken={false} repo="https://github.com/me/githarvey" />);
     expect(withRepo).toContain('href="https://github.com/me/githarvey"');
     expect(withRepo.indexOf("Compare")).toBeLessThan(withRepo.indexOf("GitHub"));
-    expect(renderToStaticMarkup(<Header hasToken={false} repo={null} />)).not.toContain("GitHub");
+    expect(renderToStaticMarkup(<Header hasToken={false} repo={null} />)).not.toContain("opens in a new tab");
   });
 });

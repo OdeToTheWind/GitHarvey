@@ -1,11 +1,4 @@
-import type { Audience, Goal } from "@/types";
-
-interface Weights {
-  recency: number;
-  license: number;
-  docs: number;
-  popularity: number;
-}
+import type { Audience, Goal, Weights } from "@/types";
 
 // Each set sums to 1.0 (a test checks this).
 export const PROFILES: Record<Audience, Weights> = {

@@ -17,7 +17,8 @@ export function Banner() {
   return (
     <section aria-label="GitHarvey" className="glow-card overflow-hidden">
       <div className="px-5 pt-12 sm:px-8 sm:pt-16 lg:px-12">
-        <p className="brand-name text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl" aria-label={BRAND}>
+        <p className="brand-name text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl">
+          <span className="sr-only">{BRAND}</span>
           {BRAND.split("").map((letter, i) => (
             <span key={i} aria-hidden="true" className="brand-letter" style={{ animationDelay: `${i * 0.09}s` }}>
               {letter}

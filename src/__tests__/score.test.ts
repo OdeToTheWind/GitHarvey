@@ -9,7 +9,7 @@ const base: RepoSummary = {
   id: 1, fullName: "a/b", description: "d", url: "https://github.com/a/b",
   stars: 100000, forks: 10, openIssues: 20, language: "Go", license: "MIT",
   pushedAt: "2026-10-20T00:00:00Z", createdAt: "2020-01-01T00:00:00Z",
-  topics: ["x"], archived: false, homepage: "https://x.dev",
+  topics: ["x"], archived: false, homepage: "https://x.dev", sizeKb: 800,
 };
 const dev: { audience: "developer"; priorities: never[] } = { audience: "developer", priorities: [] };
 const score = (r: Partial<RepoSummary>, release: string | null = null, p: Parameters<typeof scoreRepo>[2] = dev) =>

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { clearPrefs } from "@/lib/storage";
 
-/** Clears the saved preferences and the token cookie. */
+/** Clears the saved preferences and signs out. */
 export function MyActions() {
   const router = useRouter();
   async function clearAll() {
@@ -14,7 +14,7 @@ export function MyActions() {
   }
   return (
     <button type="button" className="btn-secondary" onClick={clearAll}>
-      Remove token and clear my data
+      Sign out and clear my data
     </button>
   );
 }

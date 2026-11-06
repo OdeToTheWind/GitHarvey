@@ -18,7 +18,7 @@ GitHarvey's own code is licensed under the MIT License (see `LICENSE`). The file
 
 ## Dependencies
 
-GitHarvey depends on open-source packages, each under its own license. All direct dependencies use the MIT License, except TypeScript (a development tool), which uses the Apache License 2.0. Run `npm ls` to see the full tree, and check each package's license before you redistribute a bundled build.
+GitHarvey depends on open-source packages, each under its own license. All direct dependencies use the MIT License, except three development tools that are never part of the built site: TypeScript and Playwright (Apache License 2.0) and axe-core (Mozilla Public License 2.0). Run `npm ls` to see the full tree, and check each package's license before you redistribute a bundled build.
 
 | Package | License |
 |---|---|
@@ -27,6 +27,8 @@ GitHarvey depends on open-source packages, each under its own license. All direc
 | tailwindcss, @tailwindcss/turbopack | MIT |
 | eslint, eslint-config-next, vitest | MIT |
 | typescript | Apache-2.0 |
+| @playwright/test (browser tests) | Apache-2.0 |
+| axe-core (accessibility checks in browser tests) | MPL-2.0 |
 | @types/node, @types/react, @types/react-dom | MIT |
 
 ## GitHub

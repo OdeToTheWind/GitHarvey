@@ -100,3 +100,12 @@ export function defaultPriorities(audience: Audience): Priority[] {
       return ["permissive-license", "maintained"];
   }
 }
+
+/** The sample search behind the "Try an example" button. */
+export const EXAMPLE_PREFS: Preferences = {
+  audience: "beginner",
+  goal: "learn",
+  topic: "pdf parsing",
+  language: "python",
+  priorities: defaultPriorities("beginner"),
+};

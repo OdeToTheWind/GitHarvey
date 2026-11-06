@@ -17,6 +17,7 @@ export interface RawRepo {
   topics?: string[];
   archived: boolean;
   homepage: string | null;
+  size?: number;
 }
 export interface RawSearch {
   items: RawRepo[];
@@ -24,6 +25,20 @@ export interface RawSearch {
 export interface RawRelease {
   published_at: string | null;
   created_at?: string;
+}
+export interface RawPull {
+  created_at: string;
+  merged_at: string | null;
+}
+export interface RawWeek {
+  total: number;
+}
+export interface RawContent {
+  content?: string;
+  encoding?: string;
+}
+export interface RawCount {
+  total_count: number;
 }
 
 export function mapRepo(raw: RawRepo): RepoSummary {
@@ -43,5 +58,6 @@ export function mapRepo(raw: RawRepo): RepoSummary {
     topics: raw.topics ?? [],
     archived: raw.archived,
     homepage: raw.homepage ? raw.homepage : null,
+    sizeKb: raw.size ?? 0,
   };
 }

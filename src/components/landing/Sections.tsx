@@ -36,7 +36,7 @@ export function Audiences() {
 }
 
 const STEPS = [
-  { icon: "token", title: "Add a read-only token", text: "It stays in an encrypted cookie and goes only to GitHub." },
+  { icon: "token", title: "Sign in with GitHub", text: "Read-only access to public data. Your token stays in an encrypted cookie." },
   { icon: "questions", title: "Answer four questions", text: "Who you are, your goal, a topic and what matters most." },
   { icon: "ranking", title: "Get ranked repos", text: "Scored results, comparisons and a page you can come back to." },
 ] as const;

@@ -1,0 +1,24 @@
+name: Feature request
+description: Suggest an improvement.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit with the project
+      description: GitHarvey stays free, has no database, and runs on each visitor's own GitHub sign-in (read-only).
+      options:
+        - label: This does not need a database, accounts, a shared token, analytics or third-party scripts.
+          required: true

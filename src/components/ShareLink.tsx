@@ -22,7 +22,7 @@ export function ShareLink({ prefs }: { prefs: Preferences }) {
       <button type="button" onClick={copy} className="btn-secondary">Copy shareable link</button>
       <p className="mt-2 text-sm text-muted" aria-live="polite">
         {state === "copied" ? "Link copied. " : state === "failed" ? "Could not copy. " : ""}
-        Anyone opening your link will use their own token or limited mode.
+        Anyone opening your link signs in with their own GitHub account.
       </p>
     </div>
   );

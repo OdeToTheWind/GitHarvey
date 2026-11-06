@@ -1,16 +1,9 @@
 import type { RepoHealth, RepoSummary, ScoredRepo, ScoreLine, ScoringPrefs } from "@/types";
 import { ago } from "./format";
+import { PERMISSIVE } from "./licenses";
 import { weightsFor } from "./profiles";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const PERMISSIVE = new Set([
-  "MIT",
-  "Apache-2.0",
-  "BSD-2-Clause",
-  "BSD-3-Clause",
-  "ISC",
-  "Unlicense",
-]);
 const RELEASE_BONUS = 0.05;
 
 export const DEFAULT_SCORING: ScoringPrefs = { audience: "developer", priorities: [] };
@@ -31,7 +24,7 @@ export function scoreRepo(
   prefs: ScoringPrefs = DEFAULT_SCORING,
   now: number = Date.now(),
 ): ScoredRepo {
-  const w = weightsFor(prefs.audience, prefs.goal);
+  const w = prefs.weights ?? weightsFor(prefs.audience, prefs.goal);
   const pushed = daysSince(repo.pushedAt, now);
   const recency = pushed === null ? 0 : pushed < 30 ? 1 : pushed < 180 ? 0.6 : pushed < 365 ? 0.3 : 0;
 
@@ -72,4 +65,10 @@ export function scoreRepo(
   reasons.push(repo.license ? `${licenseText} license` : "No license");
   if (releaseBonus > 0) reasons.push("Release in the last year");
   return { repo, health, score, badge, reasons: reasons.slice(0, 4), breakdown };
+}
+
+/** The word shown beside a score. Archived repos say so, whatever their score. */
+export function healthLabel(item: ScoredRepo): string {
+  if (item.repo.archived) return "Archived";
+  return item.badge === "green" ? "Healthy" : item.badge === "yellow" ? "Okay" : "Risky";
 }

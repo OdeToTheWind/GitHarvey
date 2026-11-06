@@ -10,12 +10,12 @@ export const DISCLAIMER_SECTIONS: CardItem[] = [
   {
     icon: "search",
     title: "When it asks GitHub",
-    text: "GitHarvey calls the official GitHub API (api.github.com) only after you act: you save a token, run a search, open a comparison or press Expand. The home, start and privacy pages make no request to GitHub.",
+    text: "GitHarvey calls the official GitHub API (api.github.com) only after you act: you sign in, run a search, open a comparison or a details page, or press Expand. Expand and details make several small lookups for one repo (release, pull requests, contributors, commit activity, good first issues). Signing in takes you to github.com to approve read-only access. The home, start, privacy and disclaimer pages make no request to GitHub.",
   },
   {
     icon: "token",
-    title: "Whose token is used",
-    text: "Requests come from the server, using your read-only token from an encrypted cookie. They count against your token's GitHub rate limit. When it runs out, GitHarvey shows the reset time and stops.",
+    title: "Whose access is used",
+    text: "Requests come from the server, using the read-only access GitHub gives you when you sign in (no permissions are requested), kept as a token in an encrypted cookie. They count against your own GitHub rate limit. When it runs out, GitHarvey shows the reset time and stops.",
   },
   {
     icon: "docs",
@@ -25,12 +25,12 @@ export const DISCLAIMER_SECTIONS: CardItem[] = [
   {
     icon: "score",
     title: "Scores are estimates",
-    text: "Scores and labels are automated, built from public signals such as recent activity, license, docs, popularity and releases. They are a starting point, not an audit, a security review, an endorsement or a promise that a repo is safe, maintained or right for you. GitHub data can be incomplete or out of date. Read the code and the license before you depend on a repo.",
+    text: "Scores and labels are automated, built from public signals such as recent activity, license, docs, popularity and releases. They are a starting point, not an audit, a security review, an endorsement or a promise that a repo is safe, maintained or right for you. GitHub data can be incomplete or out of date. License labels such as \"Permissive\" are information, not legal advice. Read the code and the license before you depend on a repo.",
   },
   {
     icon: "compare",
     title: "GitHub's terms apply",
-    text: "Use of the GitHub API is subject to GitHub's Terms of Service and rate limits. Use your own fine-grained, read-only token, and do not use GitHarvey to collect data in bulk. GitHub may change or restrict its API at any time, which can break or limit features.",
+    text: "Use of the GitHub API is subject to GitHub's Terms of Service and rate limits. Use GitHarvey only with your own GitHub sign-in, and do not use GitHarvey to collect data in bulk. GitHub may change or restrict its API at any time, which can break or limit features.",
   },
   {
     icon: "selfhost",
@@ -40,6 +40,6 @@ export const DISCLAIMER_SECTIONS: CardItem[] = [
   {
     icon: "archived",
     title: "No warranty",
-    text: "GitHarvey is provided as is, without warranty of any kind (see the LICENSE file). You are responsible for your token: give it the smallest permission and revoke it on GitHub if in doubt.",
+    text: "GitHarvey is provided as is, without warranty of any kind (see the LICENSE file). You are responsible for your GitHub account: sign out when you are done, and revoke GitHarvey under GitHub, Settings, Applications if in doubt.",
   },
 ];

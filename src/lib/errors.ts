@@ -17,11 +17,11 @@ export interface ErrorInfo {
 /** Turns an error into user-facing text. Never includes request details. */
 export function describeError(error: unknown): ErrorInfo {
   if (error instanceof GitHubAuthError) {
-    return { message: "GitHub rejected your token. Add it again.", resetAt: null, badToken: true };
+    return { message: "GitHub rejected your sign-in. Sign out and sign in again.", resetAt: null, badToken: true };
   }
   if (error instanceof GitHubRateLimitError) {
     return {
-      message: "GitHub rate limit reached. Wait for the time below, or add your own token for a higher limit.",
+      message: "GitHub rate limit reached. Wait for the time below and try again.",
       resetAt: error.resetAt,
       badToken: false,
     };

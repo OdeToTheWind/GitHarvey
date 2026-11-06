@@ -7,7 +7,7 @@ import { ShareLink } from "@/components/ShareLink";
 import { decodePrefs } from "@/lib/prefs";
 import { Cat } from "@/components/Cat";
 
-export const metadata: Metadata = { title: "Your page" };
+export const metadata: Metadata = { title: "Your page", robots: { index: false } };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 

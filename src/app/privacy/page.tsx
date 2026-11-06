@@ -13,11 +13,11 @@ export default function PrivacyPage() {
         heading="Our promises"
         items={[
           { icon: "security", title: "Nothing to track you", text: "No database, no analytics, no ads, and no third-party scripts." },
-          { icon: "token", title: "Your token stays encrypted", text: "It lives in an httpOnly cookie and is used only to call api.github.com. It is never logged, cached, or put in a URL." },
+          { icon: "token", title: "Your sign-in stays encrypted", text: "The access GitHub gives you lives in an httpOnly cookie and is used only to call api.github.com. It is never logged, cached, or put in a URL." },
           { icon: "docs", title: "Only public data is cached", text: "Cached GitHub data is public, and tokens never are." },
-          { icon: "questions", title: "Your answers stay in your browser", text: "Audience, goal and topic are kept locally so your page can remember them. Clear them from Your page." },
-          { icon: "score", title: "Use the smallest token", text: "A fine-grained token with public repositories read-only access and no other permissions. Remove it any time." },
-          { icon: "selfhost", title: "Open source", text: "Read the code, or self-host it so your token never touches anyone else's server." },
+          { icon: "questions", title: "Your answers and saved repos stay in your browser", text: "Audience, goal, topic and the repos you save are kept locally so your page and shortlist can remember them. Clear them from Your page and Saved." },
+          { icon: "score", title: "Read-only, nothing more", text: "GitHarvey asks GitHub for no permissions, so it can only read public data. Sign out any time, and revoke it in GitHub settings if you like." },
+          { icon: "selfhost", title: "Open source", text: "Read the code, or self-host it so your sign-in never touches anyone else's server." },
         ]}
       />
     </main>
