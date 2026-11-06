@@ -19,6 +19,18 @@ const ERRORS: Record<string, string> = {
   "oauth-off": "Sign in with GitHub is not set up on this site yet.",
 };
 
+// Why GitHub refused to hand over access. Shown beside the oauth-exchange message.
+const WHY: Record<string, string> = {
+  incorrect_client_credentials: "GitHub says the Client ID or Client secret is wrong. Copy them again from your OAuth app (the secret is shown only once, so generate a new one if needed).",
+  bad_verification_code: "The sign-in code was already used or had expired. Press Sign in with GitHub again.",
+  redirect_uri_mismatch: "The callback URL on the OAuth app does not match this site. It must be exactly this site's address followed by /api/auth/github/callback.",
+  application_suspended: "GitHub has suspended this OAuth app.",
+  unverified_user_email: "GitHub needs the account's email address to be verified first.",
+  http: "GitHub answered with an error. Please try again in a moment.",
+  network: "GitHarvey could not reach GitHub. Please try again in a moment.",
+  other: "GitHub refused the request without a known reason.",
+};
+
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
 export default async function StartPage({ searchParams }: Props) {
@@ -27,13 +39,20 @@ export default async function StartPage({ searchParams }: Props) {
   const next = safeNext(Array.isArray(raw) ? raw[0] : raw);
   const errorKey = String(params.error);
   const error = Object.hasOwn(ERRORS, errorKey) ? ERRORS[errorKey] : undefined;
+  const whyKey = String(params.why);
+  const why = errorKey === "oauth-exchange" && Object.hasOwn(WHY, whyKey) ? WHY[whyKey] : undefined;
   const state = await readToken();
   const signedIn = state.configured && state.token !== null;
 
   return (
     <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
       <h1 className="text-4xl">Get started</h1>
-      {error && <p role="alert" className="mt-6 text-clay">{error}</p>}
+      {error && (
+        <div role="alert" className="mt-6 space-y-2 text-clay">
+          <p>{error}</p>
+          {why && <p>{why}</p>}
+        </div>
+      )}
       {!state.configured && <SetupNotice />}
       {state.configured && !signedIn && (
         <SignInCard reason="GitHarvey reads public repo data from GitHub on your behalf, so you sign in first. Then you answer four short questions." next={next} />

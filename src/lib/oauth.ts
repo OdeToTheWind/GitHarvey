@@ -41,8 +41,20 @@ export function authorizeUrl(config: OAuthConfig, redirectUri: string, state: st
   return `${oauthBase()}/login/oauth/authorize?${params.toString()}`;
 }
 
-/** Trades the one-time code for an access token. Any failure is null; details are never exposed or logged. */
-export async function exchangeCode(config: OAuthConfig, code: string, redirectUri: string): Promise<string | null> {
+export type ExchangeResult = { ok: true; token: string } | { ok: false; reason: string };
+
+// GitHub's own error names for this step. They describe the app's settings, never a visitor, so they are
+// safe to show. Anything else is reported as "other".
+const KNOWN_REASONS = new Set([
+  "incorrect_client_credentials",
+  "bad_verification_code",
+  "redirect_uri_mismatch",
+  "application_suspended",
+  "unverified_user_email",
+]);
+
+/** Trades the one-time code for an access token. A failure says why in a fixed set of words; details are never exposed or logged. */
+export async function exchangeCode(config: OAuthConfig, code: string, redirectUri: string): Promise<ExchangeResult> {
   try {
     const res = await fetch(`${oauthBase()}/login/oauth/access_token`, {
       method: "POST",
@@ -50,10 +62,11 @@ export async function exchangeCode(config: OAuthConfig, code: string, redirectUr
       body: JSON.stringify({ client_id: config.clientId, client_secret: config.clientSecret, code, redirect_uri: redirectUri }),
       cache: "no-store",
     });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { access_token?: unknown };
-    return typeof body.access_token === "string" && body.access_token.length >= 20 ? body.access_token : null;
+    if (!res.ok) return { ok: false, reason: "http" };
+    const body = (await res.json()) as { access_token?: unknown; error?: unknown };
+    if (typeof body.access_token === "string" && body.access_token.length >= 20) return { ok: true, token: body.access_token };
+    return { ok: false, reason: typeof body.error === "string" && KNOWN_REASONS.has(body.error) ? body.error : "other" };
   } catch {
-    return null;
+    return { ok: false, reason: "network" };
   }
 }

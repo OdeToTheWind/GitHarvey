@@ -8,7 +8,7 @@ import { setToken } from "@/lib/session";
 
 // Finishes "Sign in with GitHub". Never log the code, the state or the token in this file.
 // Failures go back to the start page with a short reason code (never a value), so the page can say
-// which step failed: oauth-off, oauth-denied, oauth-state, oauth-exchange, oauth-scope, oauth-github.
+// which step failed: oauth-off, oauth-denied, oauth-state, oauth-exchange (plus GitHub's reason), oauth-scope, oauth-github.
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const go = (path: string) => NextResponse.redirect(new URL(path, url.origin), 302);
@@ -30,8 +30,9 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   if (!sameState(url.searchParams.get("state"), stored.state) || !isPlausibleCode(code)) return failed("oauth-state");
 
-  const token = await exchangeCode(config, code, `${url.origin}/api/auth/github/callback`);
-  if (!token) return failed("oauth-exchange");
+  const exchange = await exchangeCode(config, code, `${url.origin}/api/auth/github/callback`);
+  if (!exchange.ok) return failed(`oauth-exchange&why=${exchange.reason}`);
+  const token = exchange.token;
 
   try {
     const check = await validateToken(token);

@@ -123,8 +123,8 @@ describe("GET /api/auth/github/callback", () => {
     const { state } = await begin();
     expect(failure(await get(`/api/auth/github/callback?code=!!&state=${encodeURIComponent(state)}`, callback))).toBe("/start?error=oauth-state");
     const second = await begin();
-    mockExchange({ error: "bad_client_credentials" });
-    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(second.state)}`, callback))).toBe("/start?error=oauth-exchange");
+    mockExchange({ error: "incorrect_client_credentials" });
+    expect(failure(await get(`/api/auth/github/callback?code=abcdefghij1234&state=${encodeURIComponent(second.state)}`, callback))).toBe("/start?error=oauth-exchange&why=incorrect_client_credentials");
     expect(jar.has("rf_session")).toBe(false);
   });
   it("refuses a token that carries permissions, like a pasted classic token", async () => {
@@ -157,6 +157,27 @@ describe("sign-in problems say which step failed", () => {
 });
 
 const failure0 = (res: Response) => new URL(res.headers.get("location") ?? "").pathname + new URL(res.headers.get("location") ?? "").search;
+
+describe("why GitHub refused the exchange", () => {
+  const exchange = async (body: unknown, status = 200) => {
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => new Response(JSON.stringify(body), { status })));
+    const { exchangeCode } = await import("@/lib/oauth");
+    return exchangeCode({ clientId: "id", clientSecret: "secret" }, "abcdefghij1234", "https://a.test/cb");
+  };
+  it("names GitHub's known reasons and nothing else", async () => {
+    expect(await exchange({ error: "incorrect_client_credentials" })).toEqual({ ok: false, reason: "incorrect_client_credentials" });
+    expect(await exchange({ error: "bad_verification_code" })).toEqual({ ok: false, reason: "bad_verification_code" });
+    expect(await exchange({ error: "redirect_uri_mismatch" })).toEqual({ ok: false, reason: "redirect_uri_mismatch" });
+    expect(await exchange({ error: "<script>alert(1)</script>" })).toEqual({ ok: false, reason: "other" });
+    expect(await exchange({}, 500)).toEqual({ ok: false, reason: "http" });
+  });
+  it("reports an unreachable GitHub, and returns the token on success", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
+    const { exchangeCode } = await import("@/lib/oauth");
+    expect(await exchangeCode({ clientId: "id", clientSecret: "secret" }, "abcdefghij1234", "https://a.test/cb")).toEqual({ ok: false, reason: "network" });
+    expect(await exchange({ access_token: ACCESS_TOKEN })).toEqual({ ok: true, token: ACCESS_TOKEN });
+  });
+});
 
 describe("oauth helpers", () => {
   it("compares states without accepting empty or different values", () => {
