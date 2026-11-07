@@ -24,6 +24,12 @@ export async function signIn(page: Page): Promise<void> {
   await page.locator("html[data-ready]").waitFor();
 }
 
+/** "Try an example", then confirm it on the review step, as a visitor must. */
+export async function searchExample(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "Try an example" }).click();
+  await page.getByRole("button", { name: "Confirm and search" }).click();
+}
+
 /** Serious and critical WCAG A/AA problems on the current page, as short readable strings. */
 export async function accessibilityProblems(page: Page): Promise<string[]> {
   await page.evaluate(axeSource);

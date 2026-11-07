@@ -78,3 +78,39 @@ describe("other language", () => {
     expect(sneaky).not.toContain(":>0 user:y\"");
   });
 });
+
+import { ConfirmStep, PriorityStep } from "@/components/OnboardingSteps";
+import { PRIORITIES } from "@/lib/prefs";
+
+describe("All together", () => {
+  it("is the last priority option, unticked until every priority is chosen", () => {
+    const some = renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities: ["maintained"] }, update: noop }));
+    const labels = [...some.matchAll(/<\/label>|<label[^>]*>.*?<\/label>/g)].map((m) => m[0]);
+    expect(labels.at(-1)).toContain("All together");
+    expect(labels.at(-1)).not.toContain("checked");
+    const every = renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities: [...PRIORITIES] }, update: noop }));
+    expect([...every.matchAll(/<label[^>]*>.*?<\/label>/g)].at(-1)?.[0]).toContain("checked");
+  });
+  it("warns that choosing everything is stricter", () => {
+    expect(renderToStaticMarkup(createElement(PriorityStep, { draft: base, update: noop }))).toContain("gives fewer, stricter matches");
+  });
+});
+
+describe("review before searching", () => {
+  const draft: Preferences = { audience: "beginner", goal: "learn", topic: "  pdf parsing ", language: "Kotlin", priorities: ["maintained", "popular"] };
+  it("shows every answer in plain words", () => {
+    const html = renderToStaticMarkup(createElement(ConfirmStep, { draft, update: noop }));
+    for (const text of ["Review your search", "Beginner", "Learn something", "pdf parsing", "Kotlin", "Actively maintained, Popular"]) expect(html, text).toContain(text);
+    expect(html).toContain("only after you confirm");
+  });
+  it("says so when nothing was chosen", () => {
+    const html = renderToStaticMarkup(createElement(ConfirmStep, { draft: { ...draft, language: undefined, priorities: [] }, update: noop }));
+    expect(html).toContain("Any");
+    expect(html).toContain("Nothing in particular");
+  });
+  it("does not search from the first step: there is no confirm button until the review", () => {
+    const html = renderToStaticMarkup(createElement(Onboarding));
+    expect(html).not.toContain("Confirm and search");
+    expect(html).toContain("Step 1 of 5");
+  });
+});

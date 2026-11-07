@@ -20,9 +20,10 @@ GitHub search ranks by stars and stops there. GitHarvey scores how healthy each 
 ## How it works
 
 1. **Sign in with GitHub.** One click in the navbar, and nothing to paste. GitHub asks you to approve read-only access to public information, and no permissions are requested. Signing in is required for Get Started, Compare and every results page.
-2. **Answer four questions, or skip two.** Who you are, your goal, a topic (and optionally a language, from a list or typed in), and what matters most. **Default mode** is the starting choice for the first two, and "Skip to search" goes straight to the topic.
-3. **Get ranked repos.** One GitHub search fetches the 30 best matches. GitHarvey scores them all and shows the healthiest first, 10 at a time.
-4. **Look closer.** Open "Why this score", press Expand for extra facts, open a repo's details page, save it for later, or tick two or three repos and compare them side by side.
+2. **Answer four questions, or skip two.** Who you are, your goal, a topic (and optionally a language, from a list or typed in), and what matters most (one option, **All together**, ticks every priority at once). **Default mode** is the starting choice for the first two, and "Skip to search" goes straight to the topic.
+3. **Review and confirm.** A last step shows your answers in plain words. Nothing is sent to GitHub until you press Confirm and search, and a "Searching GitHub…" message shows while the results load.
+4. **Get ranked repos.** One GitHub search fetches the 30 best matches. GitHarvey scores them all and shows the healthiest first, 10 at a time.
+5. **Look closer.** Open "Why this score", press Expand for extra facts, open a repo's details page, save it for later, or tick two or three repos and compare them side by side.
 
 ## Features
 

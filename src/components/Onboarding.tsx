@@ -1,16 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { decodePrefs, defaultPriorities, EXAMPLE_PREFS, encodePrefs, isValidLanguage } from "@/lib/prefs";
 import { setPrefs } from "@/lib/storage";
 import type { Preferences } from "@/types";
-import { AudienceStep, GoalStep, PriorityStep, TopicStep } from "./OnboardingSteps";
+import { AudienceStep, ConfirmStep, GoalStep, PriorityStep, TopicStep } from "./OnboardingSteps";
 
-const STEPS = [AudienceStep, GoalStep, TopicStep, PriorityStep];
+// The last step is a review: nothing goes to GitHub until it is confirmed.
+const STEPS = [AudienceStep, GoalStep, TopicStep, PriorityStep, ConfirmStep];
+const TOPIC_STEP = 2;
 
 export function Onboarding() {
   const router = useRouter();
+  const [searching, startSearch] = useTransition();
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   // Starts in default mode: no profile and no special goal, so nobody has to answer the first two questions.
@@ -32,54 +35,72 @@ export function Onboarding() {
   }
 
   function next() {
-    if (step === 2 && draft.topic.trim().length === 0) {
+    if (step === TOPIC_STEP && draft.topic.trim().length === 0) {
       setError("Enter a topic (up to 80 characters).");
       return;
     }
-    if (step === 2 && draft.language && !isValidLanguage(draft.language)) {
+    if (step === TOPIC_STEP && draft.language && !isValidLanguage(draft.language)) {
       setError("Check the language: use letters, numbers, spaces and + # . - only.");
       return;
     }
     setStep((s) => s + 1);
   }
 
-  function go(prefs: Preferences) {
+  // Runs the search. Only the confirm step calls this, so results are never shown before a confirmation.
+  function confirm() {
+    const prefs = { ...draft, topic: draft.topic.trim(), language: draft.language?.trim() || undefined };
     const params = encodePrefs(prefs);
     if (!decodePrefs(params).ok) {
       setError("Check your answers and try again.");
       return;
     }
     setPrefs(prefs);
-    router.push(`/finder?${params.toString()}`);
+    startSearch(() => router.push(`/finder?${params.toString()}`));
   }
 
-  function finish(event: React.FormEvent) {
-    event.preventDefault();
-    go({ ...draft, topic: draft.topic.trim(), language: draft.language?.trim() || undefined });
+  // The example fills in a ready-made search and goes to the review, like every other path.
+  function tryExample() {
+    setDraft(EXAMPLE_PREFS);
+    setError(null);
+    setStep(STEPS.length - 1);
   }
 
-  // Default mode: skip "Who are you?" and "What do you want to do?" and go straight to the search.
+  // Default mode: skip "Who are you?" and "What do you want to do?" and go straight to the topic.
   function skipToSearch() {
     update({ audience: "default", goal: "default" });
-    setStep(2);
+    setStep(TOPIC_STEP);
+  }
+
+  // Pressing Enter moves on a step, and only searches from the review step.
+  function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (searching) return;
+    if (step === STEPS.length - 1) confirm();
+    else next();
   }
 
   const Step = STEPS[step] ?? AudienceStep;
-  const last = step === STEPS.length - 1;
+  const reviewing = step === STEPS.length - 1;
   return (
-    <form onSubmit={finish} className="glow-card space-y-8 p-8">
+    <form onSubmit={submit} className="glow-card space-y-8 p-8">
       <p className="text-sm text-muted" aria-live="polite">Step {step + 1} of {STEPS.length}</p>
       <Step draft={draft} update={update} />
       {error && <p role="alert" className="text-clay">{error}</p>}
+      {searching && (
+        <p role="status" className="text-muted">
+          <span aria-hidden="true" className="mr-2 inline-block animate-pulse text-neon">●</span>
+          Searching GitHub and scoring the results. This can take a few seconds…
+        </p>
+      )}
       <div className="flex flex-wrap gap-3">
-        {step > 0 && <button type="button" className="btn-secondary" onClick={() => setStep(step - 1)}>Back</button>}
-        {last ? (
-          <button type="submit" className="btn-primary">Find repos</button>
+        {step > 0 && <button type="button" className="btn-secondary" disabled={searching} onClick={() => setStep(step - 1)}>Back</button>}
+        {reviewing ? (
+          <button type="submit" className="btn-primary" disabled={searching}>{searching ? "Searching…" : "Confirm and search"}</button>
         ) : (
-          <button type="button" className="btn-primary" onClick={next}>Next</button>
+          <button type="button" className="btn-primary" onClick={next}>{step === STEPS.length - 2 ? "Review search" : "Next"}</button>
         )}
-        {step < 2 && <button type="button" className="btn-secondary" onClick={skipToSearch}>Skip to search</button>}
-        {step === 0 && <button type="button" className="btn-secondary" onClick={() => go(EXAMPLE_PREFS)}>Try an example</button>}
+        {step < TOPIC_STEP && <button type="button" className="btn-secondary" onClick={skipToSearch}>Skip to search</button>}
+        {step === 0 && <button type="button" className="btn-secondary" onClick={tryExample}>Try an example</button>}
       </div>
     </form>
   );

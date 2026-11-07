@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { accessibilityProblems, open, signIn } from "./helpers";
+import { accessibilityProblems, open, searchExample, signIn } from "./helpers";
 
 const FAKE_GITHUB = "http://127.0.0.1:4010";
 
@@ -56,7 +56,7 @@ test("default mode skips the first two questions, and any language can be typed"
   await expect(page.getByLabel("Beginner")).not.toBeChecked();
 
   await page.getByRole("button", { name: "Skip to search" }).click();
-  await expect(page.getByText("Step 3 of 4")).toBeVisible();
+  await expect(page.getByText("Step 3 of 5")).toBeVisible();
   await page.locator("#topic").fill("pdf parsing");
   await page.locator("#lang").selectOption({ label: "Other…" });
   await page.locator("#lang-other").fill("go stars:>1");
@@ -66,11 +66,41 @@ test("default mode skips the first two questions, and any language can be typed"
 
   await page.locator("#lang-other").fill("Kotlin");
   await page.getByRole("button", { name: "Next", exact: true }).click();
-  await page.getByRole("button", { name: "Find repos" }).click();
+
+  // Step 4: "All together" ticks every priority, and unticks them all again.
+  const allTogether = page.getByLabel("All together");
+  await allTogether.check();
+  for (const label of ["Actively maintained", "Beginner friendly", "Popular", "Permissive license"]) await expect(page.getByLabel(label)).toBeChecked();
+  await allTogether.uncheck();
+  await expect(page.getByLabel("Popular")).not.toBeChecked();
+  await allTogether.check();
+
+  // Step 5: nothing is searched until it is confirmed, and Back goes back without searching.
+  await page.getByRole("button", { name: "Review search" }).click();
+  await expect(page.getByText("Review your search")).toBeVisible();
+  await expect(page.getByText("pdf parsing")).toBeVisible();
+  await expect(page.getByText("Kotlin")).toBeVisible();
+  await expect(page.getByText("Default (no profile)")).toBeVisible();
+  await expect(page).toHaveURL(/\/start/);
+  await page.getByRole("button", { name: "Back" }).click();
+  await expect(page.getByLabel("All together")).toBeChecked();
+  await page.getByRole("button", { name: "Review search" }).click();
+  await page.getByRole("button", { name: "Confirm and search" }).click();
   await expect(page).toHaveURL(/aud=default/);
   await expect(page).toHaveURL(/goal=default/);
   await expect(page).toHaveURL(/lang=Kotlin/);
+  await expect(page).toHaveURL(/pri=maintained%2Cbeginner-friendly%2Cpopular%2Cpermissive-license/);
   await expect(page.locator("article").first()).toBeVisible();
+});
+
+test("pressing Enter in the topic box moves to the next step instead of searching", async ({ page }) => {
+  await signIn(page);
+  await open(page, "/start");
+  await page.getByRole("button", { name: "Skip to search" }).click();
+  await page.locator("#topic").fill("pdf parsing");
+  await page.locator("#topic").press("Enter");
+  await expect(page.getByText("Step 4 of 5")).toBeVisible();
+  await expect(page).toHaveURL(/\/start/);
 });
 
 test("signing in from the Compare page brings you back to it", async ({ page }) => {
@@ -83,7 +113,7 @@ test("signing in from the Compare page brings you back to it", async ({ page }) 
 test("search, expand, save, filter, tune and compare", async ({ page }) => {
   await signIn(page);
   await open(page, "/start");
-  await page.getByRole("button", { name: "Try an example" }).click();
+  await searchExample(page);
   await expect(page).toHaveURL(/\/finder\?/);
 
   const cards = page.locator("article");
@@ -174,7 +204,7 @@ for (const scheme of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme: scheme });
     await signIn(page);
     await open(page, "/start");
-    await page.getByRole("button", { name: "Try an example" }).click();
+    await searchExample(page);
     await expect(page.locator("article")).toHaveCount(4);
     await page.locator("article").first().getByRole("button", { name: "Expand" }).click();
     await page.getByText("Tune the score").click();

@@ -138,6 +138,7 @@ export function TopicStep({ draft, update }: StepProps) {
 }
 
 export function PriorityStep({ draft, update }: StepProps) {
+  const all = PRIORITIES.every((p) => draft.priorities.includes(p));
   function toggle(p: Priority) {
     const has = draft.priorities.includes(p);
     update({ priorities: has ? draft.priorities.filter((x) => x !== p) : [...draft.priorities, p] });
@@ -152,7 +153,39 @@ export function PriorityStep({ draft, update }: StepProps) {
             {PRIORITY_LABEL[p]}
           </label>
         ))}
+        {/* The last option ticks every priority at once, and clears them all when ticked again. */}
+        <label className={`tap gap-2 rounded-md border px-4 ${all ? "border-neon" : "border-line"}`}>
+          <input type="checkbox" checked={all} onChange={() => update({ priorities: all ? [] : [...PRIORITIES] })} />
+          All together
+        </label>
       </div>
+      <p className="mt-3 text-sm text-muted">Results must match every priority you pick, so choosing all of them gives fewer, stricter matches.</p>
     </fieldset>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-sm text-muted">{label}</dt>
+      <dd>{value}</dd>
+    </div>
+  );
+}
+
+/** The last step: your answers in plain words. Nothing is sent to GitHub until you confirm. */
+export function ConfirmStep({ draft }: StepProps) {
+  return (
+    <section aria-labelledby="confirm-h">
+      <h3 id="confirm-h" className="font-bold">Review your search</h3>
+      <p className="mt-2 text-sm text-muted">Check your answers. GitHarvey asks GitHub only after you confirm, and the results can take a few seconds.</p>
+      <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Row label="Who you are" value={AUDIENCE_LABEL[draft.audience]} />
+        <Row label="What you want to do" value={GOAL_LABEL[draft.goal]} />
+        <Row label="Topic" value={draft.topic.trim()} />
+        <Row label="Language" value={draft.language?.trim() || "Any"} />
+        <Row label="What matters most" value={draft.priorities.map((p) => PRIORITY_LABEL[p]).join(", ") || "Nothing in particular"} />
+      </dl>
+    </section>
   );
 }
