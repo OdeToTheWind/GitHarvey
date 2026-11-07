@@ -20,7 +20,7 @@ GitHub search ranks by stars and stops there. GitHarvey scores how healthy each 
 ## How it works
 
 1. **Sign in with GitHub.** One click in the navbar, and nothing to paste. GitHub asks you to approve read-only access to public information, and no permissions are requested. Signing in is required for Get Started, Compare and every results page.
-2. **Answer four questions.** Who you are, your goal, a topic (and optionally a language), and what matters most.
+2. **Answer four questions, or skip two.** Who you are, your goal, a topic (and optionally a language, from a list or typed in), and what matters most. **Default mode** is the starting choice for the first two, and "Skip to search" goes straight to the topic.
 3. **Get ranked repos.** One GitHub search fetches the 30 best matches. GitHarvey scores them all and shows the healthiest first, 10 at a time.
 4. **Look closer.** Open "Why this score", press Expand for extra facts, open a repo's details page, save it for later, or tick two or three repos and compare them side by side.
 
@@ -35,6 +35,8 @@ GitHub search ranks by stars and stops there. GitHarvey scores how healthy each 
 - **Sort, filter and tune.** Sort by health, stars or last push, filter by license and stars, or move four sliders to decide how much each signal counts. All in your browser, with no extra GitHub calls.
 - **Save for later.** A shortlist kept in your browser (no account), with a Saved page you can compare from.
 - **Repo details page** (`/repo/owner/name`) with the full breakdown, facts and trend chart, in a link that holds only the repo name.
+- **Default mode.** Not sure who you are or what you want? Keep Default and just search, with balanced scoring.
+- **Any language.** Pick from the list or type your own (Kotlin, Ruby, PHP, ...).
 - **Quick start helpers.** "Try an example" and style chips (starter kit, boilerplate, tutorial, examples) on the start page.
 - **Shareable links** for comparisons and for your results page. They hold repo names and your answers, never your token.
 - **Your page** remembers your answers in your browser.

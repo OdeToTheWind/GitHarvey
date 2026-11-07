@@ -3,6 +3,12 @@ import { accessibilityProblems, open, signIn } from "./helpers";
 
 const FAKE_GITHUB = "http://127.0.0.1:4010";
 
+// The sign-in routes allow 20 attempts a minute per address. Every test signs in, so each one gets its own address.
+test.beforeEach(async ({ context }) => {
+  const part = () => Math.floor(Math.random() * 250) + 1;
+  await context.setExtraHTTPHeaders({ "x-forwarded-for": `10.${part()}.${part()}.${part()}` });
+});
+
 test("home page shows the banner and a GitHub link next to Compare", async ({ page }) => {
   await open(page, "/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Great repos are everywhere");
@@ -41,6 +47,30 @@ test("signing in unlocks Get Started and Compare, and signing out locks them aga
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page.getByText("Sign in with GitHub to continue")).toBeVisible();
   await expect(page.locator("#repos")).toHaveCount(0);
+});
+
+test("default mode skips the first two questions, and any language can be typed", async ({ page }) => {
+  await signIn(page);
+  await open(page, "/start");
+  await expect(page.getByLabel("Default (no profile)")).toBeChecked();
+  await expect(page.getByLabel("Beginner")).not.toBeChecked();
+
+  await page.getByRole("button", { name: "Skip to search" }).click();
+  await expect(page.getByText("Step 3 of 4")).toBeVisible();
+  await page.locator("#topic").fill("pdf parsing");
+  await page.locator("#lang").selectOption({ label: "Other…" });
+  await page.locator("#lang-other").fill("go stars:>1");
+  await expect(page.getByText("Use letters, numbers, spaces and + # . - only.")).toBeVisible();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByText("Check the language")).toBeVisible();
+
+  await page.locator("#lang-other").fill("Kotlin");
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await page.getByRole("button", { name: "Find repos" }).click();
+  await expect(page).toHaveURL(/aud=default/);
+  await expect(page).toHaveURL(/goal=default/);
+  await expect(page).toHaveURL(/lang=Kotlin/);
+  await expect(page.locator("article").first()).toBeVisible();
 });
 
 test("signing in from the Compare page brings you back to it", async ({ page }) => {
@@ -140,6 +170,7 @@ test("pressing / jumps to the main input", async ({ page }) => {
 
 for (const scheme of ["light", "dark"] as const) {
   test(`no serious accessibility problems (${scheme})`, async ({ page }) => {
+    test.setTimeout(240_000); // visits a dozen pages, and the dev server compiles each one the first time
     await page.emulateMedia({ colorScheme: scheme });
     await signIn(page);
     await open(page, "/start");

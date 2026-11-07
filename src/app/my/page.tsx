@@ -4,6 +4,7 @@ import { MyActions } from "@/components/MyActions";
 import { MyRedirect } from "@/components/MyRedirect";
 import { ResultsSection } from "@/components/ResultsSection";
 import { ShareLink } from "@/components/ShareLink";
+import { describePrefs } from "@/lib/describe";
 import { decodePrefs } from "@/lib/prefs";
 import { Cat } from "@/components/Cat";
 
@@ -25,11 +26,7 @@ export default async function MyPage({ searchParams }: Props) {
     <main className="w-full px-5 sm:px-8 lg:px-12 pb-24 sm:pb-32">
       <Cat name="ranking" size={88} />
       <h1 className="text-4xl">Your page</h1>
-      <p className="mt-3 max-w-xl text-muted">
-        You are a {prefs.audience} who wants to {prefs.goal.replace("-", " ")} with “{prefs.topic}”
-        {prefs.language ? ` in ${prefs.language}` : ""}.
-        {prefs.priorities.length > 0 ? ` You care about: ${prefs.priorities.join(", ")}.` : ""}
-      </p>
+      <p className="mt-3 max-w-xl text-muted">{describePrefs(prefs)}</p>
       <div className="mt-4 flex flex-wrap gap-3">
         <Link href="/start" className="btn-secondary">Edit preferences</Link>
         <MyActions />

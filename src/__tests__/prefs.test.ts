@@ -50,10 +50,25 @@ describe("prefs", () => {
     expect(result.ok && result.prefs.priorities).toEqual(["popular", "maintained"]);
   });
 
-  it("rejects an unknown language", () => {
-    const params = encodePrefs(base);
-    params.set("lang", "cobol");
-    expect(decodePrefs(params).ok).toBe(false);
+  it("accepts a language the visitor typed, and keeps it as written", () => {
+    for (const lang of ["Kotlin", "cobol", "C++", "F#", "Jupyter Notebook", "Objective-C"]) {
+      const params = encodePrefs({ ...base, language: lang });
+      const result = decodePrefs(params);
+      expect(result.ok && result.prefs.language, lang).toBe(lang);
+    }
+  });
+
+  it("rejects a language that could add search qualifiers or markup", () => {
+    for (const lang of ["go stars:>1", 'x"y', "<script>", "a:b", "-flag", "x".repeat(31), "   "]) {
+      const params = encodePrefs(base);
+      params.set("lang", lang);
+      expect(decodePrefs(params).ok, lang).toBe(false);
+    }
+  });
+
+  it("accepts default mode for both questions", () => {
+    const result = decodePrefs(encodePrefs({ ...base, audience: "default", goal: "default" }));
+    expect(result.ok && [result.prefs.audience, result.prefs.goal]).toEqual(["default", "default"]);
   });
 
   it("never throws on garbage input", () => {

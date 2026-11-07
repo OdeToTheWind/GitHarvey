@@ -23,8 +23,12 @@ describe("alternatives", () => {
   it("falls back to the repo name when there are no topics", () => {
     expect(topicFromRepo({ ...repo, topics: [] })).toBe("pdf toolkit");
   });
-  it("leaves the language off when it is not one we can filter by", () => {
+  it("keeps any other language by name, so alternatives stay in the same language", () => {
     const url = new URL(alternativesHref({ ...repo, language: "Haskell" }, { audience: "developer", priorities: [] }), "https://x.test");
+    expect(url.searchParams.get("lang")).toBe("Haskell");
+  });
+  it("leaves the language off when the name is not safe to search by", () => {
+    const url = new URL(alternativesHref({ ...repo, language: 'Evil" stars:>1' }, { audience: "developer", priorities: [] }), "https://x.test");
     expect(url.searchParams.has("lang")).toBe(false);
   });
 });

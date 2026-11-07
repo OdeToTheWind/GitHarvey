@@ -1,5 +1,5 @@
 import type { Preferences, RepoSummary, ScoringPrefs } from "@/types";
-import { encodePrefs, LANGUAGES } from "./prefs";
+import { encodePrefs, isValidLanguage, LANGUAGES } from "./prefs";
 import { LANGUAGE_NAMES } from "./query";
 
 const MAX_TOPIC = 80;
@@ -11,8 +11,10 @@ export function topicFromRepo(repo: RepoSummary): string {
   return (fromTopics || name.replace(/[-_.]/g, " ")).slice(0, MAX_TOPIC).trim();
 }
 
-function languageKey(name: string | null): Preferences["language"] {
-  return LANGUAGES.find((key) => LANGUAGE_NAMES[key] === name);
+/** The listed key when the repo's language is one of ours, else the language name itself (if it is safe to search by). */
+function languageFor(name: string | null): Preferences["language"] {
+  if (!name) return undefined;
+  return LANGUAGES.find((key) => LANGUAGE_NAMES[key] === name) ?? (isValidLanguage(name) ? name : undefined);
 }
 
 /** A finder link for repos like this one. The repo itself is left out of the results. */
@@ -21,7 +23,7 @@ export function alternativesHref(repo: RepoSummary, scoring: ScoringPrefs): stri
     audience: scoring.audience,
     goal: "compare",
     topic: topicFromRepo(repo),
-    language: languageKey(repo.language),
+    language: languageFor(repo.language),
     priorities: scoring.priorities,
   };
   const params = encodePrefs(prefs);

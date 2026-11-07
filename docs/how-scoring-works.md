@@ -16,10 +16,13 @@ With the "permissive license" priority, only MIT, MIT-0, Apache-2.0, BSD-2-Claus
 
 ## Weights by audience
 
+**Default** is the choice for people who do not want to say who they are: balanced weights, no assumptions. It is also the starting answer on the Get started page, and "Skip to search" uses it, so nobody has to answer "Who are you?" or "What do you want to do?" (the goal "Default" means no special goal).
+
 Each row sums to 1.0.
 
 | Audience | Recent activity | License | Docs | Popularity |
 |---|---|---|---|---|
+| default | 0.3 | 0.15 | 0.2 | 0.35 |
 | beginner | 0.2 | 0.1 | 0.4 | 0.3 |
 | developer | 0.4 | 0.15 | 0.15 | 0.3 |
 | security | 0.5 | 0.1 | 0.1 | 0.3 |
@@ -47,6 +50,7 @@ One GitHub search call fetches the 30 best matches. GitHarvey scores all 30 and 
 - "Actively maintained" adds a `pushed:>` filter (one year back).
 - "Popular" requires more than 100 stars. Otherwise repos need more than 10 stars.
 - "Beginner friendly" adds `good-first-issues:>0`.
+- **Language** is optional. Pick one from the list, or choose Other and type any language GitHub knows (for example Kotlin or Jupyter Notebook). Typed names may use letters, numbers, spaces and `+ # . -` only, so they can never add search qualifiers of their own.
 - "Permissive license" changes the license score, as above.
 - Goal "stay updated" asks GitHub for the most recently updated matches first.
 - Goal "compare" starts with the top three results ticked for comparison.

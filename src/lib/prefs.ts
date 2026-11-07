@@ -6,8 +6,8 @@ import type { Audience, Preferences, Priority, ScoringPrefs } from "@/types";
 // "jitless" skips the probe. It only changes how validation is compiled, never the result.
 z.config({ jitless: true });
 
-export const AUDIENCES = ["beginner", "developer", "security", "founder"] as const;
-export const GOALS = ["learn", "build", "compare", "stay-updated"] as const;
+export const AUDIENCES = ["default", "beginner", "developer", "security", "founder"] as const;
+export const GOALS = ["default", "learn", "build", "compare", "stay-updated"] as const;
 export const PRIORITIES = [
   "maintained",
   "beginner-friendly",
@@ -25,11 +25,19 @@ export const LANGUAGES = [
   "cpp",
 ] as const;
 
+// A language the visitor typed: letters, digits, spaces and + # . - only (for example "Kotlin", "C++", "Jupyter Notebook").
+// No quotes or colons, so it can never add its own search qualifiers.
+const CUSTOM_LANGUAGE = /^[A-Za-z0-9][A-Za-z0-9+#.\- ]{0,29}$/;
+
+export function isValidLanguage(text: string): boolean {
+  return CUSTOM_LANGUAGE.test(text.trim());
+}
+
 const prefsSchema = z.object({
   audience: z.enum(AUDIENCES),
   goal: z.enum(GOALS),
   topic: z.string().trim().min(1).max(80),
-  language: z.enum(LANGUAGES).optional(),
+  language: z.union([z.enum(LANGUAGES), z.string().trim().regex(CUSTOM_LANGUAGE)]).optional(),
   priorities: z
     .array(z.enum(PRIORITIES))
     .max(10)
@@ -95,6 +103,8 @@ export function decodeScoring(params: RawParams): ScoringPrefs {
 /** Starting priorities for each audience in onboarding. */
 export function defaultPriorities(audience: Audience): Priority[] {
   switch (audience) {
+    case "default":
+      return ["maintained"];
     case "beginner":
       return ["beginner-friendly", "maintained"];
     case "developer":

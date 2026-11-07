@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { decodePrefs, defaultPriorities, EXAMPLE_PREFS, encodePrefs } from "@/lib/prefs";
+import { decodePrefs, defaultPriorities, EXAMPLE_PREFS, encodePrefs, isValidLanguage } from "@/lib/prefs";
 import { setPrefs } from "@/lib/storage";
 import type { Preferences } from "@/types";
 import { AudienceStep, GoalStep, PriorityStep, TopicStep } from "./OnboardingSteps";
@@ -13,11 +13,12 @@ export function Onboarding() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  // Starts in default mode: no profile and no special goal, so nobody has to answer the first two questions.
   const [draft, setDraft] = useState<Preferences>({
-    audience: "developer",
-    goal: "build",
+    audience: "default",
+    goal: "default",
     topic: "",
-    priorities: defaultPriorities("developer"),
+    priorities: defaultPriorities("default"),
   });
 
   function update(patch: Partial<Preferences>) {
@@ -35,6 +36,10 @@ export function Onboarding() {
       setError("Enter a topic (up to 80 characters).");
       return;
     }
+    if (step === 2 && draft.language && !isValidLanguage(draft.language)) {
+      setError("Check the language: use letters, numbers, spaces and + # . - only.");
+      return;
+    }
     setStep((s) => s + 1);
   }
 
@@ -50,7 +55,13 @@ export function Onboarding() {
 
   function finish(event: React.FormEvent) {
     event.preventDefault();
-    go({ ...draft, topic: draft.topic.trim() });
+    go({ ...draft, topic: draft.topic.trim(), language: draft.language?.trim() || undefined });
+  }
+
+  // Default mode: skip "Who are you?" and "What do you want to do?" and go straight to the search.
+  function skipToSearch() {
+    update({ audience: "default", goal: "default" });
+    setStep(2);
   }
 
   const Step = STEPS[step] ?? AudienceStep;
@@ -67,6 +78,7 @@ export function Onboarding() {
         ) : (
           <button type="button" className="btn-primary" onClick={next}>Next</button>
         )}
+        {step < 2 && <button type="button" className="btn-secondary" onClick={skipToSearch}>Skip to search</button>}
         {step === 0 && <button type="button" className="btn-secondary" onClick={() => go(EXAMPLE_PREFS)}>Try an example</button>}
       </div>
     </form>

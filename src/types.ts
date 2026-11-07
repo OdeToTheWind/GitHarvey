@@ -1,5 +1,7 @@
-export type Audience = "beginner" | "developer" | "security" | "founder";
-export type Goal = "learn" | "build" | "compare" | "stay-updated";
+/** "default" is the no-profile choice: balanced scoring, no assumptions about who you are. */
+export type Audience = "default" | "beginner" | "developer" | "security" | "founder";
+/** "default" means "just search": no special goal. */
+export type Goal = "default" | "learn" | "build" | "compare" | "stay-updated";
 export type Priority =
   | "maintained"
   | "beginner-friendly"
@@ -10,7 +12,7 @@ export interface Preferences {
   audience: Audience;
   goal: Goal;
   topic: string; // free text, max 80 chars
-  language?: string;
+  language?: string; // one of the listed languages, or any language the visitor typed
   priorities: Priority[];
 }
 
