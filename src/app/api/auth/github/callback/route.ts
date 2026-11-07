@@ -12,7 +12,7 @@ import { setToken } from "@/lib/session";
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const go = (path: string) => NextResponse.redirect(new URL(path, url.origin), 302);
-  const failed = (reason: string) => go(`/start?error=${reason}`);
+  const failed = (reason: string) => go(`/search-repo?error=${reason}`);
 
   const config = getOAuthConfig();
   if (!config) return failed("oauth-off");
@@ -43,5 +43,5 @@ export async function GET(request: Request) {
   } catch {
     return failed("oauth-github");
   }
-  return go(stored.next ?? "/start");
+  return go(stored.next ?? "/search-repo");
 }

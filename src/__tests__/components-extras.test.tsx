@@ -35,7 +35,7 @@ const extras = (merge: number | null, contributors: number | null): RepoExtras =
   dependencies: { count: 4, file: "package.json" },
 });
 const card = (item: ReturnType<typeof scored>) =>
-  renderToStaticMarkup(createElement(ResultCard, { item, scoring: prefs, selected: false, canSelect: true, onToggle: () => {} }));
+  renderToStaticMarkup(createElement(ResultCard, { item, scoring: prefs, selected: false, onToggle: () => {} }));
 
 describe("result card labels", () => {
   it("shows the license type and a size hint without any extra GitHub call", () => {
@@ -164,5 +164,38 @@ describe("Sign in with GitHub", () => {
     expect(prod).toContain("not set up on this site yet");
     expect(prod).not.toContain("GITHUB_CLIENT_SECRET");
     vi.unstubAllEnvs();
+  });
+});
+
+describe("comparing up to 10", () => {
+  it("allows ten checkboxes to be ticked and explains the limit in one place", async () => {
+    const { MAX_COMPARE, TOO_MANY_MESSAGE } = await import("@/lib/compare");
+    expect(MAX_COMPARE).toBe(10);
+    expect(TOO_MANY_MESSAGE).toContain("up to 10 repos");
+    const html = renderToStaticMarkup(createElement(ResultCard, { item: scored(1), scoring: prefs, selected: false, onToggle: () => {} }));
+    expect(html).not.toMatch(/<input[^>]*type="checkbox"[^>]*disabled/);
+  });
+  it("shows how many can be compared next to the button", async () => {
+    const { ResultsList } = await import("@/components/ResultsList");
+    const html = renderToStaticMarkup(createElement(ResultsList, { results: [scored(1), scored(2)], prefs: { ...prefs, goal: "compare" } }));
+    expect(html).toContain("Compare (2)");
+    expect(html).toContain("up to 10");
+    expect(html).not.toContain('role="alert"');
+  });
+  it("drops the slower facts from a big comparison, in the table and in the exports", async () => {
+    const { rowsFor, exportTable } = await import("@/lib/compare-rows");
+    const labels = rowsFor(true).map((r) => r.label);
+    for (const gone of ["Contributors", "Median time to merge a PR", "Maintenance trend", "Good first issues", "Dependencies (approx.)"]) expect(labels).not.toContain(gone);
+    for (const kept of ["Score", "Stars", "License type", "Last release"]) expect(labels).toContain(kept);
+    const items = [scored(1), scored(2)];
+    expect(exportTable(items, [], true).rows.map((r) => r.label)).not.toContain("Contributors");
+    expect(exportTable(items, [], false).rows.map((r) => r.label)).toContain("Contributors");
+    const html = renderToStaticMarkup(createElement(CompareTable, { items, lite: true }));
+    expect(html).not.toContain("Contributors");
+    expect(html).toContain("Stars");
+  });
+  it("makes room for many columns", () => {
+    const items = Array.from({ length: 10 }, (_, i) => scored(i + 1));
+    expect(renderToStaticMarkup(createElement(CompareTable, { items, lite: true }))).toContain("min-width:120rem");
   });
 });

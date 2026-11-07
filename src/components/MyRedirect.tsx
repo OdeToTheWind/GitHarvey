@@ -10,7 +10,7 @@ export function MyRedirect() {
   const router = useRouter();
   useEffect(() => {
     const prefs = getPrefs();
-    router.replace(prefs ? `/my?${encodePrefs(prefs).toString()}` : "/start");
+    router.replace(prefs ? `/my?${encodePrefs(prefs).toString()}` : "/search-repo");
   }, [router]);
   return <p className="text-muted">Loading your page…</p>;
 }

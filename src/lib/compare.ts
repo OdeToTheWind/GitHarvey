@@ -1,5 +1,13 @@
 import type { ScoredRepo } from "@/types";
 
+export const MIN_COMPARE = 2;
+/** The most repos compared at once. Past this, the table is too wide to read and GitHub's limits get close. */
+export const MAX_COMPARE = 10;
+/** Above this many repos the slower extra facts are skipped, to stay within GitHub's limits. */
+export const FULL_FACTS_UP_TO = 5;
+
+export const TOO_MANY_MESSAGE = `You can compare up to ${MAX_COMPARE} repos at a time. Untick one to choose another.`;
+
 /** Indexes holding the best value (ties included). Nulls never win. */
 export function bestIndexes(values: (number | null)[], mode: "max" | "min" = "max"): Set<number> {
   const real = values.filter((v): v is number => v !== null);

@@ -18,11 +18,10 @@ interface Props {
   item: ScoredRepo;
   scoring: ScoringPrefs;
   selected: boolean;
-  canSelect: boolean;
   onToggle: () => void;
 }
 
-export function ResultCard({ item, scoring, selected, canSelect, onToggle }: Props) {
+export function ResultCard({ item, scoring, selected, onToggle }: Props) {
   const { details, busy, failed, load } = useRepoDetails(item.repo.fullName);
   const [open, setOpen] = useState(false);
 
@@ -65,7 +64,7 @@ export function ResultCard({ item, scoring, selected, canSelect, onToggle }: Pro
       <ScoreBreakdown item={shown} />
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <label className="tap gap-2">
-          <input type="checkbox" checked={selected} disabled={!selected && !canSelect} onChange={onToggle} />
+          <input type="checkbox" checked={selected} onChange={onToggle} />
           Compare
         </label>
         <div className="flex flex-wrap gap-3">

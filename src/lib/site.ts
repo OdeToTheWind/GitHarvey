@@ -25,7 +25,7 @@ export function siteUrl(): string {
 }
 
 /** Pages worth indexing. Results, compare, details, saved and your page stay out: they need you to be signed in. */
-export const PUBLIC_PATHS = ["/", "/start", "/privacy", "/disclaimer"] as const;
+export const PUBLIC_PATHS = ["/", "/search-repo", "/privacy", "/disclaimer"] as const;
 
 /** Pages that need a signed-in visitor. Crawlers are asked to skip them. */
 export const PRIVATE_PATHS = ["/api/", "/finder", "/compare", "/my", "/repo/", "/saved"] as const;

@@ -11,7 +11,7 @@ export function Hero() {
         </h1>
         <p className="mt-8 max-w-2xl text-muted">{ABOUT}</p>
         <div className="mt-12 flex flex-wrap gap-4">
-          <Link href="/start" className="btn-primary">Get started</Link>
+          <Link href="/search-repo" className="btn-primary">Get started</Link>
           <Link href="/compare" className="btn-secondary">Compare two repos</Link>
         </div>
       </div>

@@ -13,7 +13,7 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 export default async function FinderPage({ searchParams }: Props) {
   const params = await searchParams;
   const decoded = decodePrefs(params);
-  if (!decoded.ok) redirect("/start");
+  if (!decoded.ok) redirect("/search-repo");
   const { prefs } = decoded;
   const not = Array.isArray(params.not) ? params.not[0] : params.not;
   const exclude = not && isValidRepoName(not) ? not : undefined;
@@ -22,7 +22,7 @@ export default async function FinderPage({ searchParams }: Props) {
       <Cat name="search" size={88} />
       <h1 className="text-4xl">Results for “{prefs.topic}”</h1>
       <p className="mt-4 text-muted">
-        <Link href="/start" className="text-neon underline underline-offset-4">Change answers</Link>
+        <Link href="/search-repo" className="text-neon underline underline-offset-4">Change answers</Link>
         {exclude && <> · Showing repos like {exclude}, without {exclude} itself.</>}
       </p>
       <ResultsSection prefs={prefs} exclude={exclude} />

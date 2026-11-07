@@ -18,7 +18,7 @@ export async function open(page: Page, path: string): Promise<void> {
 
 /** Signs in the way a visitor does: press "Sign in with GitHub", approve on (fake) GitHub, land back signed in. */
 export async function signIn(page: Page): Promise<void> {
-  await open(page, "/start");
+  await open(page, "/search-repo");
   await page.getByRole("link", { name: "Sign in with GitHub" }).first().click();
   await page.getByText("You are signed in with GitHub.").waitFor();
   await page.locator("html[data-ready]").waitFor();

@@ -1,3 +1,4 @@
+import { MAX_COMPARE, MIN_COMPARE } from "./compare";
 import { isValidRepoName } from "./repoName";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -23,9 +24,13 @@ export function age(iso: string, now: number = Date.now()): string {
   return `${Math.floor(days / 365)} years`;
 }
 
-/** Parses ?repos=a/b,c/d. Needs 2-3 valid, distinct repo names; otherwise not ok. */
-export function parseCompare(value: string | undefined): { ok: true; names: string[] } | { ok: false } {
+export type CompareParse = { ok: true; names: string[] } | { ok: false; reason: "too-few" | "too-many" | "invalid" };
+
+/** Parses ?repos=a/b,c/d. Needs 2 to 10 valid, distinct repo names; otherwise not ok, and says why. */
+export function parseCompare(value: string | undefined): CompareParse {
   const names = Array.from(new Set((value ?? "").split(",").map((n) => n.trim()).filter(Boolean)));
-  if (names.length < 2 || names.length > 3 || !names.every(isValidRepoName)) return { ok: false };
+  if (!names.every(isValidRepoName)) return { ok: false, reason: "invalid" };
+  if (names.length > MAX_COMPARE) return { ok: false, reason: "too-many" };
+  if (names.length < MIN_COMPARE) return { ok: false, reason: "too-few" };
   return { ok: true, names };
 }

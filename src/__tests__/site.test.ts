@@ -32,7 +32,7 @@ describe("site addresses and crawler rules", () => {
     const sitemap = (await import("@/app/sitemap")).default();
     expect(sitemap.map((s) => s.url)).toEqual([
       "https://githarvey.example",
-      "https://githarvey.example/start",
+      "https://githarvey.example/search-repo",
       "https://githarvey.example/privacy",
       "https://githarvey.example/disclaimer",
     ]);

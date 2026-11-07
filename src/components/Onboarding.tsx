@@ -94,10 +94,12 @@ export function Onboarding() {
       )}
       <div className="flex flex-wrap gap-3">
         {step > 0 && <button type="button" className="btn-secondary" disabled={searching} onClick={() => setStep(step - 1)}>Back</button>}
+        {/* Separate keys on purpose: if React reused one button element, "Review search" would turn into the
+            submit button during its own click, and the browser would submit the form before it was confirmed. */}
         {reviewing ? (
-          <button type="submit" className="btn-primary" disabled={searching}>{searching ? "Searching…" : "Confirm and search"}</button>
+          <button key="confirm" type="submit" className="btn-primary" disabled={searching}>{searching ? "Searching…" : "Confirm and search"}</button>
         ) : (
-          <button type="button" className="btn-primary" onClick={next}>{step === STEPS.length - 2 ? "Review search" : "Next"}</button>
+          <button key="next" type="button" className="btn-primary" onClick={next}>{step === STEPS.length - 2 ? "Review search" : "Next"}</button>
         )}
         {step < TOPIC_STEP && <button type="button" className="btn-secondary" onClick={skipToSearch}>Skip to search</button>}
         {step === 0 && <button type="button" className="btn-secondary" onClick={tryExample}>Try an example</button>}

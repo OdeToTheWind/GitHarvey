@@ -13,7 +13,11 @@ export const PRIORITIES = [
   "beginner-friendly",
   "popular",
   "permissive-license",
+  "any",
 ] as const;
+
+/** The four priorities that narrow a search. "any" is the opposite: it removes every filter. */
+export const FILTER_PRIORITIES = PRIORITIES.filter((p) => p !== "any");
 export const LANGUAGES = [
   "javascript",
   "typescript",

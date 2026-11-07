@@ -15,6 +15,7 @@ export function Header({ hasToken, repo }: { hasToken: boolean; repo: string | n
         GitHarvey<span className="text-neon">_</span>
       </Link>
       <nav aria-label="Main" className="flex flex-wrap items-center gap-x-7 text-sm">
+        <Link href="/search-repo" className="tap underline-offset-4 hover:underline">Search your repo</Link>
         <Link href="/compare" className="tap underline-offset-4 hover:underline">Compare</Link>
         {repo && (
           <a href={repo} target="_blank" rel="noopener noreferrer" className="tap inline-flex items-center gap-2 underline-offset-4 hover:underline">

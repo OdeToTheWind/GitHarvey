@@ -28,7 +28,7 @@ export default async function MyPage({ searchParams }: Props) {
       <h1 className="text-4xl">Your page</h1>
       <p className="mt-3 max-w-xl text-muted">{describePrefs(prefs)}</p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <Link href="/start" className="btn-secondary">Edit preferences</Link>
+        <Link href="/search-repo" className="btn-secondary">Edit preferences</Link>
         <MyActions />
       </div>
       <div className="mt-4"><ShareLink prefs={prefs} /></div>

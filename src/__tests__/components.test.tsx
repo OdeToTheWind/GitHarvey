@@ -26,7 +26,7 @@ const prefs: Preferences = { audience: "developer", goal: "build", topic: "pdf",
 const scored = (n: number, extra: Partial<RepoSummary> = {}) => scoreRepo(repo(n, extra), { lastReleaseAt: null, checked: false }, prefs);
 
 describe("ResultCard", () => {
-  const html = renderToStaticMarkup(createElement(ResultCard, { item: scored(1), scoring: prefs, selected: false, canSelect: true, onToggle: () => {} }));
+  const html = renderToStaticMarkup(createElement(ResultCard, { item: scored(1), scoring: prefs, selected: false, onToggle: () => {} }));
   it("shows the score and its working", () => {
     expect(html).toContain("owner/repo1");
     expect(html).toContain("Why this score");
@@ -82,7 +82,7 @@ describe("landing call-to-action cards", () => {
     const final = renderToStaticMarkup(createElement(FinalCta));
     expect(compare).toContain("Torn between two repos?");
     expect(compare).toContain('href="/compare"');
-    expect(final).toContain('href="/start"');
+    expect(final).toContain('href="/search-repo"');
     expect(compare.replace(/<[^>]+>/g, "").length).toBeGreaterThan(20);
   });
 });

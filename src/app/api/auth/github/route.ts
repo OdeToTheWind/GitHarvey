@@ -8,7 +8,7 @@ import { safeNext } from "@/lib/redirect";
 // Starts "Sign in with GitHub". Never log the request or any value from it in this file.
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const back = (error: string) => NextResponse.redirect(new URL(`/start?error=${error}`, url.origin), 302);
+  const back = (error: string) => NextResponse.redirect(new URL(`/search-repo?error=${error}`, url.origin), 302);
 
   const config = getOAuthConfig();
   if (!config) return back("oauth-off");

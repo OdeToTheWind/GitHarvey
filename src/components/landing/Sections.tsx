@@ -11,7 +11,7 @@ export function Features() {
       intro="GitHub search ranks by stars and stops there. GitHarvey adds a health score and shows how every point was earned."
       items={[
         { icon: "score", title: "A health score", text: "Every repo gets 0 to 100 from how recently it was updated, its license, docs, popularity and releases. The reasons are shown." },
-        { icon: "compare", title: "Side-by-side comparison", text: "Pick two or three repos and see them in one table, with the best value in each row marked." },
+        { icon: "compare", title: "Side-by-side comparison", text: "Pick two to ten repos and see them in one table, with the best value in each row marked." },
         { icon: "ranking", title: "Reasons you can read", text: "Every score has a \"Why this score\" panel listing each signal and the points it added, so you can judge the number yourself." },
       ]}
     />
@@ -84,7 +84,7 @@ export function CompareCta() {
     <CtaCard
       icon="compare"
       heading="Torn between two repos?"
-      text="Put two or three side by side and see which one is healthier."
+      text="Put two or more side by side and see which one is healthier."
       href="/compare"
       label="Compare repos"
       primary={false}
@@ -98,7 +98,7 @@ export function FinalCta() {
       icon="search"
       heading="Ready to find yours?"
       text="Free for everyone. Open source. No database."
-      href="/start"
+      href="/search-repo"
       label="Get started"
       primary
     />

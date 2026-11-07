@@ -17,7 +17,7 @@ export function Footer() {
         <nav aria-label="Explore">
           <p className="font-bold text-ink">Explore</p>
           <ul className="mt-4 space-y-1">
-            <li><Link href="/start" className={link}>Get started</Link></li>
+            <li><Link href="/search-repo" className={link}>Get started</Link></li>
             <li><Link href="/compare" className={link}>Compare repos</Link></li>
             <li><Link href="/privacy" className={link}>Privacy</Link></li>
             <li><Link href="/disclaimer" className={link}>Disclaimer</Link></li>

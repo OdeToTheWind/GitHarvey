@@ -59,12 +59,22 @@ export async function loadDetails(fullName: string, token: string): Promise<Repo
   return { health, extras: { mergeSpeed, contributors, weeklyCommits, goodFirstIssues, dependencies } };
 }
 
-/** A repo, its details and its score, for the compare and detail pages. */
+const NO_EXTRAS: RepoExtras = { mergeSpeed: null, contributors: null, weeklyCommits: null, goodFirstIssues: null, dependencies: null };
+
+/**
+ * A repo, its details and its score, for the compare and detail pages. `lite` skips the slower extra facts
+ * (about seven GitHub calls per repo) so a big comparison stays within GitHub's limits.
+ */
 export async function loadScoredRepo(
   fullName: string,
   token: string,
   prefs: ScoringPrefs = DEFAULT_SCORING,
+  lite = false,
 ): Promise<{ scored: ScoredRepo; extras: RepoExtras }> {
+  if (lite) {
+    const [{ repo }, health] = await Promise.all([getRepo(fullName, token), loadRelease(fullName, token)]);
+    return { scored: scoreRepo(repo, health, prefs), extras: NO_EXTRAS };
+  }
   const [{ repo }, { health, extras }] = await Promise.all([getRepo(fullName, token), loadDetails(fullName, token)]);
   return { scored: scoreRepo(repo, health, prefs), extras };
 }

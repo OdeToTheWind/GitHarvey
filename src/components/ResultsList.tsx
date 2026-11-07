@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { MAX_COMPARE, MIN_COMPARE, TOO_MANY_MESSAGE } from "@/lib/compare";
 import { compareHref } from "@/lib/links";
 import { weightsFor } from "@/lib/profiles";
 import { applyView, DEFAULT_VIEW, type ResultsView } from "@/lib/results-view";
@@ -14,14 +15,15 @@ import { ResultCard } from "./ResultCard";
 import { ResultsToolbar } from "./ResultsToolbar";
 import { WeightSliders } from "./WeightSliders";
 
-const MAX_COMPARE = 3;
+// The "compare" goal starts with the top three ticked; the limit for choosing more is MAX_COMPARE.
+const PRESELECT = 3;
 const PAGE = 10;
 
 function EmptyState({ prefs }: { prefs: Preferences }) {
   const tips = [
     "Use fewer or more general words.",
     prefs.language ? "Remove the language filter." : null,
-    prefs.priorities.length > 0 ? "Turn off a priority such as “actively maintained” or “popular”." : null,
+    prefs.priorities.some((p) => p !== "any") ? "Turn off a priority such as “actively maintained” or “popular”." : null,
   ].filter((t): t is string => t !== null);
   return (
     <div className="mt-8 max-w-xl">
@@ -30,7 +32,7 @@ function EmptyState({ prefs }: { prefs: Preferences }) {
       <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
         {tips.map((t) => <li key={t}>{t}</li>)}
       </ul>
-      <Link href="/start" className="btn-primary mt-4">Change answers</Link>
+      <Link href="/search-repo" className="btn-primary mt-4">Change answers</Link>
     </div>
   );
 }
@@ -39,8 +41,9 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
   const router = useRouter();
   // Goal "compare" starts with the top three ticked.
   const [selected, setSelected] = useState<string[]>(() =>
-    prefs.goal === "compare" ? results.slice(0, MAX_COMPARE).map((r) => r.repo.fullName) : [],
+    prefs.goal === "compare" ? results.slice(0, PRESELECT).map((r) => r.repo.fullName) : [],
   );
+  const [limitHit, setLimitHit] = useState(false);
   const [visible, setVisible] = useState(PAGE);
   const [view, setView] = useState<ResultsView>(DEFAULT_VIEW);
   const [tuning, setTuning] = useState<Weights | null>(null);
@@ -54,6 +57,12 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
   }, [results, custom, scoring, view]);
 
   function toggle(name: string) {
+    // An 11th repo is not added: the visitor gets an alert instead of a silently dead checkbox.
+    if (!selected.includes(name) && selected.length >= MAX_COMPARE) {
+      setLimitHit(true);
+      return;
+    }
+    setLimitHit(false);
     setSelected((cur) => (cur.includes(name) ? cur.filter((n) => n !== name) : [...cur, name]));
   }
 
@@ -78,7 +87,6 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
             item={item}
             scoring={scoring}
             selected={selected.includes(item.repo.fullName)}
-            canSelect={selected.length < MAX_COMPARE}
             onToggle={() => toggle(item.repo.fullName)}
           />
         ))}
@@ -90,9 +98,12 @@ export function ResultsList({ results, prefs }: { results: ScoredRepo[]; prefs: 
           </button>
         </div>
       )}
-      <div className="sticky bottom-4 mt-6 flex justify-end">
-        <button type="button" className="btn-primary" disabled={selected.length < 2} onClick={() => router.push(compareHref(selected, prefs))}>
-          Compare ({selected.length})
+      <div className="sticky bottom-4 mt-6 flex flex-col items-end gap-3">
+        {limitHit && (
+          <p role="alert" className="max-w-md rounded-md border border-clay bg-clay-soft px-4 py-3 text-clay">{TOO_MANY_MESSAGE}</p>
+        )}
+        <button type="button" className="btn-primary" disabled={selected.length < MIN_COMPARE} onClick={() => router.push(compareHref(selected, prefs))}>
+          Compare ({selected.length}) · up to {MAX_COMPARE}
         </button>
       </div>
     </>

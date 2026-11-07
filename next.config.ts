@@ -37,6 +37,10 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  // The Get started page used to live at /start. Old links and bookmarks keep working.
+  async redirects() {
+    return [{ source: "/start", destination: "/search-repo", permanent: true }];
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

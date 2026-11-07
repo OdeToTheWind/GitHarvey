@@ -20,17 +20,17 @@ GitHub search ranks by stars and stops there. GitHarvey scores how healthy each 
 ## How it works
 
 1. **Sign in with GitHub.** One click in the navbar, and nothing to paste. GitHub asks you to approve read-only access to public information, and no permissions are requested. Signing in is required for Get Started, Compare and every results page.
-2. **Answer four questions, or skip two.** Who you are, your goal, a topic (and optionally a language, from a list or typed in), and what matters most (one option, **All together**, ticks every priority at once). **Default mode** is the starting choice for the first two, and "Skip to search" goes straight to the topic.
+2. **Search your repo.** Press Search your repo in the navbar (`/search-repo`) and answer four questions: who you are, your goal, a topic (and optionally a language, from a list or typed in), and what matters most. **Default mode** is the starting choice for the first two, and "Skip to search" goes straight to the topic. In the last question, **All together** ticks every priority and **Any** removes every filter, so the search covers all kinds of repos (tiny, old and archived ones too).
 3. **Review and confirm.** A last step shows your answers in plain words. Nothing is sent to GitHub until you press Confirm and search, and a "Searching GitHub…" message shows while the results load.
 4. **Get ranked repos.** One GitHub search fetches the 30 best matches. GitHarvey scores them all and shows the healthiest first, 10 at a time.
-5. **Look closer.** Open "Why this score", press Expand for extra facts, open a repo's details page, save it for later, or tick two or three repos and compare them side by side.
+5. **Look closer.** Open "Why this score", press Expand for extra facts, open a repo's details page, save it for later, or tick two to ten repos and compare them side by side. Ticking an 11th shows an alert.
 
 ## Features
 
 - **Health score, 0 to 100,** with a Healthy / Okay / Risky label. The word and number always appear, so colour is never the only signal.
 - **"Why this score"** on every result: each signal, what was found, and the points it added.
 - **Answers that change the search.** Audience sets the scoring weights. Goal and priorities change the query: recently updated, popular, beginner friendly (good first issues), permissive license.
-- **Side-by-side comparison** of two or three repos, with the best value in each row marked and a data-only summary line. Copy it as Markdown or download it as CSV.
+- **Side-by-side comparison** of two to ten repos, with the best value in each row marked and a data-only summary line. Copy it as Markdown or download it as CSV.
 - **Also worth knowing,** facts that never change the score: open issues, license type (permissive, copyleft, restricted), codebase size hint, contributors, how fast pull requests get merged, a 52-week commit trend, good first issues and a rough dependency count.
 - **Warnings in plain words** for archived repos and repos with no push in over a year, with a one-click **Find alternatives** search.
 - **Sort, filter and tune.** Sort by health, stars or last push, filter by license and stars, or move four sliders to decide how much each signal counts. All in your browser, with no extra GitHub calls.

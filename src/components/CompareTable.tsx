@@ -1,11 +1,12 @@
-import { COMPARE_ROWS, type Extras } from "@/lib/compare-rows";
+import { type Extras, rowsFor } from "@/lib/compare-rows";
 import type { ScoredRepo } from "@/types";
 import { HealthBadge } from "./HealthBadge";
 
-export function CompareTable({ items, extras = [] }: { items: ScoredRepo[]; extras?: Extras }) {
+/** `lite`: a big comparison, shown without the facts that need the slower lookups. */
+export function CompareTable({ items, extras = [], lite = false }: { items: ScoredRepo[]; extras?: Extras; lite?: boolean }) {
   return (
     <div className="glow-card overflow-x-auto">
-      <table className="w-full min-w-[34rem] border-collapse text-left">
+      <table className="w-full border-collapse text-left" style={{ minWidth: `${10 + items.length * 11}rem` }}>
         <caption className="sr-only">Side-by-side comparison of {items.map((r) => r.repo.fullName).join(", ")}</caption>
         <thead>
           <tr className="border-b border-line">
@@ -18,7 +19,7 @@ export function CompareTable({ items, extras = [] }: { items: ScoredRepo[]; extr
           </tr>
         </thead>
         <tbody>
-          {COMPARE_ROWS.map((row) => {
+          {rowsFor(lite).map((row) => {
             const found = row.best?.(items, extras);
             // A tie is not a win: mark a value only when it beats at least one other.
             const best = found && found.size < items.length ? found : undefined;

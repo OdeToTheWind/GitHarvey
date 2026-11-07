@@ -12,6 +12,10 @@ export function describePrefs(prefs: Preferences): string {
         ? `You are a ${prefs.audience}`
         : `You are a ${prefs.audience} who wants to ${goal}`;
   const language = prefs.language ? ` in ${prefs.language}` : "";
-  const priorities = prefs.priorities.length > 0 ? ` You care about: ${prefs.priorities.join(", ")}.` : "";
+  const priorities = prefs.priorities.includes("any")
+    ? " Searching all kinds of repos, with no filters."
+    : prefs.priorities.length > 0
+      ? ` You care about: ${prefs.priorities.join(", ")}.`
+      : "";
   return `${who} with “${prefs.topic}”${language}.${priorities}`;
 }

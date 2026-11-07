@@ -6,7 +6,8 @@ export type Priority =
   | "maintained"
   | "beginner-friendly"
   | "popular"
-  | "permissive-license";
+  | "permissive-license"
+  | "any"; // no filters at all: every kind of repo, however small or old
 
 export interface Preferences {
   audience: Audience;

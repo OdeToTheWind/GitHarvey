@@ -80,16 +80,17 @@ describe("other language", () => {
 });
 
 import { ConfirmStep, PriorityStep } from "@/components/OnboardingSteps";
-import { PRIORITIES } from "@/lib/prefs";
+import { FILTER_PRIORITIES } from "@/lib/prefs";
 
 describe("All together", () => {
-  it("is the last priority option, unticked until every priority is chosen", () => {
-    const some = renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities: ["maintained"] }, update: noop }));
-    const labels = [...some.matchAll(/<\/label>|<label[^>]*>.*?<\/label>/g)].map((m) => m[0]);
-    expect(labels.at(-1)).toContain("All together");
-    expect(labels.at(-1)).not.toContain("checked");
-    const every = renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities: [...PRIORITIES] }, update: noop }));
-    expect([...every.matchAll(/<label[^>]*>.*?<\/label>/g)].at(-1)?.[0]).toContain("checked");
+  const labelsOf = (priorities: Preferences["priorities"]) =>
+    [...renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities }, update: noop })).matchAll(/<label[^>]*>.*?<\/label>/g)].map((m) => m[0]);
+  it("comes just before the last option, and is unticked until every real priority is chosen", () => {
+    const some = labelsOf(["maintained"]);
+    expect(some.at(-2)).toContain("All together");
+    expect(some.at(-2)).not.toContain("checked");
+    expect(labelsOf([...FILTER_PRIORITIES]).at(-2)).toContain("checked");
+    expect(labelsOf([...FILTER_PRIORITIES]).at(-1)).not.toContain("checked");
   });
   it("warns that choosing everything is stricter", () => {
     expect(renderToStaticMarkup(createElement(PriorityStep, { draft: base, update: noop }))).toContain("gives fewer, stricter matches");
@@ -112,5 +113,31 @@ describe("review before searching", () => {
     const html = renderToStaticMarkup(createElement(Onboarding));
     expect(html).not.toContain("Confirm and search");
     expect(html).toContain("Step 1 of 5");
+  });
+});
+
+describe("Any", () => {
+  const labelsOf = (priorities: Preferences["priorities"]) =>
+    [...renderToStaticMarkup(createElement(PriorityStep, { draft: { ...base, priorities }, update: noop })).matchAll(/<label[^>]*>.*?<\/label>/g)].map((m) => m[0]);
+  it("is the very last option, ticked only when chosen", () => {
+    expect(labelsOf([]).at(-1)).toContain("Any");
+    expect(labelsOf([]).at(-1)).not.toContain("checked");
+    expect(labelsOf(["any"]).at(-1)).toContain("checked");
+    expect(labelsOf(["any"]).slice(0, -1).every((l) => !l.includes("checked"))).toBe(true);
+  });
+  it("searches every kind of repo: no minimum stars, no archived filter, no priority filters", () => {
+    const query = buildSearchQuery({ ...base, topic: "pdf", priorities: ["any"] }, NOW);
+    expect(query).toBe("pdf");
+    expect(buildSearchQuery({ ...base, topic: "pdf", priorities: ["any"], language: "Kotlin" }, NOW)).toBe("pdf language:Kotlin");
+    expect(buildSearchQuery({ ...base, topic: "pdf", priorities: [] }, NOW)).toBe("pdf archived:false stars:>10");
+  });
+  it("beats any other priority if both somehow arrive, because it asks for no filters", () => {
+    expect(buildSearchQuery({ ...base, topic: "pdf", priorities: ["maintained", "any"] }, NOW)).toBe("pdf");
+  });
+  it("survives the address, is described plainly, and shows on the review step", () => {
+    const decoded = decodePrefs(encodePrefs({ ...base, priorities: ["any"] }));
+    expect(decoded.ok && decoded.prefs.priorities).toEqual(["any"]);
+    expect(describePrefs({ ...base, priorities: ["any"] })).toBe("You are searching in default mode with “pdf”. Searching all kinds of repos, with no filters.");
+    expect(renderToStaticMarkup(createElement(ConfirmStep, { draft: { ...base, priorities: ["any"] }, update: noop }))).toContain("Any (no filters)");
   });
 });

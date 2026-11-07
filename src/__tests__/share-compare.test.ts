@@ -13,14 +13,19 @@ describe("buildShareUrl", () => {
 });
 
 describe("parseCompare", () => {
-  it("accepts 2-3 valid repos", () => {
+  const names = (n: number) => Array.from({ length: n }, (_, i) => `o/r${i}`).join(",");
+  it("accepts 2 to 10 valid repos", () => {
     expect(parseCompare("a/b,c/d")).toEqual({ ok: true, names: ["a/b", "c/d"] });
+    expect(parseCompare(names(10)).ok).toBe(true);
   });
-  it("rejects traversal, too few and too many", () => {
-    expect(parseCompare("../x,a").ok).toBe(false);
-    expect(parseCompare("a/b").ok).toBe(false);
-    expect(parseCompare("a/b,c/d,e/f,g/h").ok).toBe(false);
-    expect(parseCompare(undefined).ok).toBe(false);
+  it("rejects traversal and too few, and says why", () => {
+    expect(parseCompare("../x,a")).toEqual({ ok: false, reason: "invalid" });
+    expect(parseCompare("a/b")).toEqual({ ok: false, reason: "too-few" });
+    expect(parseCompare(undefined)).toEqual({ ok: false, reason: "too-few" });
+  });
+  it("rejects an 11th repo, with its own reason", () => {
+    expect(parseCompare(names(11))).toEqual({ ok: false, reason: "too-many" });
+    expect(parseCompare(`${names(10)},o/r0`).ok).toBe(true); // a repeat is not a new repo
   });
 });
 

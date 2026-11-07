@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AUDIENCES, GOALS, isValidLanguage, LANGUAGES, PRIORITIES } from "@/lib/prefs";
+import { AUDIENCES, FILTER_PRIORITIES, GOALS, isValidLanguage, LANGUAGES } from "@/lib/prefs";
 import { LANGUAGE_NAMES } from "@/lib/query";
 import { TOPIC_STYLES, toggleStyle } from "@/lib/topic-styles";
 import type { Audience, Goal, Preferences, Priority } from "@/types";
@@ -25,6 +25,7 @@ const PRIORITY_LABEL: Record<Priority, string> = {
   "beginner-friendly": "Beginner friendly",
   popular: "Popular",
   "permissive-license": "Permissive license",
+  any: "Any (no filters)",
 };
 
 interface StepProps {
@@ -138,28 +139,37 @@ export function TopicStep({ draft, update }: StepProps) {
 }
 
 export function PriorityStep({ draft, update }: StepProps) {
-  const all = PRIORITIES.every((p) => draft.priorities.includes(p));
+  const all = FILTER_PRIORITIES.every((p) => draft.priorities.includes(p));
+  const any = draft.priorities.includes("any");
   function toggle(p: Priority) {
-    const has = draft.priorities.includes(p);
-    update({ priorities: has ? draft.priorities.filter((x) => x !== p) : [...draft.priorities, p] });
+    // Choosing a real priority takes "Any" off: they cannot both be true.
+    const rest: Priority[] = draft.priorities.filter((x) => x !== "any");
+    update({ priorities: rest.includes(p) ? rest.filter((x) => x !== p) : [...rest, p] });
   }
+  const box = (on: boolean) => `tap gap-2 rounded-md border px-4 ${on ? "border-neon" : "border-line"}`;
   return (
     <fieldset>
       <legend className="font-bold">What matters most?</legend>
       <div className="mt-4 flex flex-wrap gap-4">
-        {PRIORITIES.map((p) => (
-          <label key={p} className={`tap gap-2 rounded-md border px-4 ${draft.priorities.includes(p) ? "border-neon" : "border-line"}`}>
+        {FILTER_PRIORITIES.map((p) => (
+          <label key={p} className={box(draft.priorities.includes(p))}>
             <input type="checkbox" checked={draft.priorities.includes(p)} onChange={() => toggle(p)} />
             {PRIORITY_LABEL[p]}
           </label>
         ))}
-        {/* The last option ticks every priority at once, and clears them all when ticked again. */}
-        <label className={`tap gap-2 rounded-md border px-4 ${all ? "border-neon" : "border-line"}`}>
-          <input type="checkbox" checked={all} onChange={() => update({ priorities: all ? [] : [...PRIORITIES] })} />
+        {/* "All together" ticks every priority at once, and clears them all when ticked again. */}
+        <label className={box(all)}>
+          <input type="checkbox" checked={all} onChange={() => update({ priorities: all ? [] : [...FILTER_PRIORITIES] })} />
           All together
+        </label>
+        {/* "Any" is last: no filters at all, so the search covers every kind of repo. */}
+        <label className={box(any)}>
+          <input type="checkbox" checked={any} onChange={() => update({ priorities: any ? [] : ["any"] })} />
+          Any
         </label>
       </div>
       <p className="mt-3 text-sm text-muted">Results must match every priority you pick, so choosing all of them gives fewer, stricter matches.</p>
+      <p className="mt-1 text-sm text-muted">Any searches thoroughly, with no obligations: tiny, old and archived repos are included too.</p>
     </fieldset>
   );
 }

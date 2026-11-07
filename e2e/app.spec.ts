@@ -24,7 +24,7 @@ test("signed out: Get Started and Compare ask for sign-in, and the navbar offers
   await expect(nav.getByRole("link", { name: "Sign in with GitHub" })).toHaveAttribute("href", "/api/auth/github");
   await expect(nav.getByRole("button", { name: "Sign out" })).toHaveCount(0);
 
-  await open(page, "/start");
+  await open(page, "/search-repo");
   await expect(page.getByText("Sign in with GitHub to continue")).toBeVisible();
   await expect(page.getByText("Tell us what you need")).toHaveCount(0);
   await expect(page.getByLabel(/token/i)).toHaveCount(0);
@@ -51,7 +51,7 @@ test("signing in unlocks Get Started and Compare, and signing out locks them aga
 
 test("default mode skips the first two questions, and any language can be typed", async ({ page }) => {
   await signIn(page);
-  await open(page, "/start");
+  await open(page, "/search-repo");
   await expect(page.getByLabel("Default (no profile)")).toBeChecked();
   await expect(page.getByLabel("Beginner")).not.toBeChecked();
 
@@ -81,7 +81,7 @@ test("default mode skips the first two questions, and any language can be typed"
   await expect(page.getByText("pdf parsing")).toBeVisible();
   await expect(page.getByText("Kotlin")).toBeVisible();
   await expect(page.getByText("Default (no profile)")).toBeVisible();
-  await expect(page).toHaveURL(/\/start/);
+  await expect(page).toHaveURL(/\/search-repo/);
   await page.getByRole("button", { name: "Back" }).click();
   await expect(page.getByLabel("All together")).toBeChecked();
   await page.getByRole("button", { name: "Review search" }).click();
@@ -95,12 +95,78 @@ test("default mode skips the first two questions, and any language can be typed"
 
 test("pressing Enter in the topic box moves to the next step instead of searching", async ({ page }) => {
   await signIn(page);
-  await open(page, "/start");
+  await open(page, "/search-repo");
   await page.getByRole("button", { name: "Skip to search" }).click();
   await page.locator("#topic").fill("pdf parsing");
   await page.locator("#topic").press("Enter");
   await expect(page.getByText("Step 4 of 5")).toBeVisible();
-  await expect(page).toHaveURL(/\/start/);
+  await expect(page).toHaveURL(/\/search-repo/);
+});
+
+test("the navbar has Search your repo, and the old /start address still works", async ({ page }) => {
+  await open(page, "/");
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Search your repo" }).click();
+  await expect(page).toHaveURL(/\/search-repo$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Get started");
+  await page.goto("/start?next=%2Ffinder");
+  await expect(page).toHaveURL(/\/search-repo\?next=%2Ffinder/);
+});
+
+test("Any searches every kind of repo, with no filters", async ({ page, request }) => {
+  await signIn(page);
+  await open(page, "/search-repo");
+  await page.getByRole("button", { name: "Skip to search" }).click();
+  await page.locator("#topic").fill("pdf parsing");
+  await page.getByRole("button", { name: "Next", exact: true }).click();
+  await expect(page.getByLabel("Actively maintained")).toBeChecked(); // the default
+  await page.getByLabel("Any", { exact: true }).check();
+  for (const label of ["Actively maintained", "Beginner friendly", "Popular", "Permissive license", "All together"]) await expect(page.getByLabel(label)).not.toBeChecked();
+  await page.getByLabel("Popular").check(); // choosing a real priority takes Any off
+  await expect(page.getByLabel("Any", { exact: true })).not.toBeChecked();
+  await page.getByLabel("Any", { exact: true }).check();
+  await page.getByRole("button", { name: "Review search" }).click();
+  await expect(page.getByText("Any (no filters)")).toBeVisible();
+  await page.getByRole("button", { name: "Confirm and search" }).click();
+  await expect(page).toHaveURL(/pri=any/);
+  await expect(page.locator("article").first()).toBeVisible();
+  const { lastQuery } = await (await request.get(`${FAKE_GITHUB}/__seen`)).json();
+  expect(lastQuery).toBe("pdf parsing"); // no stars floor, no archived filter, nothing else
+});
+
+test("comparing: up to 10 repos can be ticked, an 11th gets an alert", async ({ page }) => {
+  await signIn(page);
+  await open(page, "/finder?aud=default&goal=default&q=many&pri=any");
+  await page.getByRole("button", { name: /Show 2 more/ }).click();
+  const boxes = page.locator("article").getByLabel("Compare");
+  await expect(boxes).toHaveCount(12);
+  for (let i = 0; i < 10; i += 1) await boxes.nth(i).check();
+  await expect(page.getByRole("button", { name: /Compare \(10\)/ })).toBeEnabled();
+  await expect(page.getByText("You can compare up to 10 repos at a time.")).toHaveCount(0);
+  await boxes.nth(10).click();
+  await expect(page.getByText("You can compare up to 10 repos at a time. Untick one to choose another.")).toBeVisible();
+  await expect(boxes.nth(10)).not.toBeChecked();
+  await boxes.nth(0).uncheck(); // making room clears the alert and lets another in
+  await expect(page.getByText("You can compare up to 10 repos at a time.")).toHaveCount(0);
+  await boxes.nth(10).check();
+  await expect(boxes.nth(10)).toBeChecked();
+});
+
+test("a big comparison leaves out the slow facts, and more than 10 is refused", async ({ page }) => {
+  await signIn(page);
+  const six = ["alpha", "beta", "gamma", "delta", "extra0", "extra1"].map((n) => `acme/${n}`).join(",");
+  await open(page, `/compare?repos=${encodeURIComponent(six)}`);
+  await expect(page.getByRole("table")).toContainText("acme/extra1");
+  await expect(page.getByText("With more than 5 repos")).toBeVisible();
+  await expect(page.getByRole("table")).not.toContainText("Contributors");
+
+  const five = ["alpha", "beta", "gamma", "delta", "extra0"].map((n) => `acme/${n}`).join(",");
+  await open(page, `/compare?repos=${encodeURIComponent(five)}`);
+  await expect(page.getByRole("table")).toContainText("Contributors");
+
+  const eleven = ["alpha", "beta", "gamma", "delta", ...Array.from({ length: 7 }, (_, i) => `extra${i}`)].map((n) => `acme/${n}`).join(",");
+  await open(page, `/compare?repos=${encodeURIComponent(eleven)}`);
+  await expect(page.getByText("You entered more than 10 repos.")).toBeVisible();
+  await expect(page.getByRole("table")).toHaveCount(0);
 });
 
 test("signing in from the Compare page brings you back to it", async ({ page }) => {
@@ -112,7 +178,7 @@ test("signing in from the Compare page brings you back to it", async ({ page }) 
 
 test("search, expand, save, filter, tune and compare", async ({ page }) => {
   await signIn(page);
-  await open(page, "/start");
+  await open(page, "/search-repo");
   await searchExample(page);
   await expect(page).toHaveURL(/\/finder\?/);
 
@@ -203,7 +269,7 @@ for (const scheme of ["light", "dark"] as const) {
     test.setTimeout(240_000); // visits a dozen pages, and the dev server compiles each one the first time
     await page.emulateMedia({ colorScheme: scheme });
     await signIn(page);
-    await open(page, "/start");
+    await open(page, "/search-repo");
     await searchExample(page);
     await expect(page.locator("article")).toHaveCount(4);
     await page.locator("article").first().getByRole("button", { name: "Expand" }).click();
@@ -211,12 +277,12 @@ for (const scheme of ["light", "dark"] as const) {
     const problems: Record<string, string[]> = {};
     problems["/finder"] = await accessibilityProblems(page);
     await page.context().clearCookies();
-    for (const path of ["/start", "/compare"]) {
+    for (const path of ["/search-repo", "/compare"]) {
       await open(page, path);
       problems[`${path} (signed out)`] = await accessibilityProblems(page);
     }
     await signIn(page);
-    for (const path of ["/", "/start", "/compare?repos=acme%2Falpha%2Cacme%2Fbeta", "/repo/acme/alpha", "/saved", "/privacy", "/disclaimer"]) {
+    for (const path of ["/", "/search-repo", "/compare?repos=acme%2Falpha%2Cacme%2Fbeta", "/repo/acme/alpha", "/saved", "/privacy", "/disclaimer"]) {
       await open(page, path);
       await page.locator("h1").first().waitFor();
       problems[path] = await accessibilityProblems(page);

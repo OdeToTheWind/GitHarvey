@@ -18,9 +18,11 @@ const REPOS = [
   repo(3, "gamma", { stargazers_count: 400, license: null, pushed_at: iso(40), topics: ["starter", "pdf"], size: 300 }),
   repo(4, "delta", { stargazers_count: 40, license: { spdx_id: "MIT" }, pushed_at: iso(800), archived: true, homepage: null, size: 90000 }),
 ];
-const byName = Object.fromEntries(REPOS.map((r) => [r.full_name, r]));
+// Eight more repos, returned only for a search that contains the word "many", so tests can pick more than ten.
+const EXTRA = Array.from({ length: 8 }, (_, i) => repo(10 + i, `extra${i}`, { stargazers_count: 50 + i }));
+const byName = Object.fromEntries([...REPOS, ...EXTRA].map((r) => [r.full_name, r]));
 
-const seen = { withAuth: 0, withoutAuth: 0 };
+const seen = { withAuth: 0, withoutAuth: 0, lastQuery: "" };
 const rateHeaders = { "x-ratelimit-remaining": "4999", "x-ratelimit-reset": String(Math.floor(Date.now() / 1000) + 3600) };
 
 function send(res, status, body, headers = {}) {
@@ -51,7 +53,11 @@ const server = createServer((req, res) => {
     if (auth.includes("BAD")) return send(res, 401, { message: "Bad credentials" });
     return send(res, 200, { resources: {} }, auth.includes("ghp_") ? { "x-oauth-scopes": "repo" } : {});
   }
-  if (url.pathname === "/search/repositories") return send(res, 200, { items: REPOS });
+  if (url.pathname === "/search/repositories") {
+    const query = url.searchParams.get("q") ?? "";
+    seen.lastQuery = query;
+    return send(res, 200, { items: query.includes("many") ? [...REPOS, ...EXTRA] : REPOS });
+  }
   if (url.pathname === "/search/issues") return send(res, 200, { total_count: 5 });
 
   const m = /^\/repos\/([^/]+\/[^/]+)(\/.*)?$/.exec(url.pathname);

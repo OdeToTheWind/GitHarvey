@@ -33,6 +33,11 @@ export function buildSearchQuery(prefs: Preferences, now: Date = new Date()): st
   // Strip ":" and quotes so users cannot inject search qualifiers. Keeps c++ and node.js.
   const topic = prefs.topic.replace(/[:"]/g, " ").replace(/\s+/g, " ").trim();
   if (!topic) return "";
+  // "Any" searches every kind of repo: no minimum stars, archived and old repos included, no other priority filter.
+  // (A language, if given, still applies: it is a separate choice.)
+  if (prefs.priorities.includes("any")) {
+    return [topic, prefs.language ? languageQualifier(prefs.language) : ""].filter(Boolean).join(" ");
+  }
   const parts = [topic, "archived:false"];
   // Skip the tiniest repos unless "popular" already asks for more.
   parts.push(prefs.priorities.includes("popular") ? "stars:>100" : "stars:>10");

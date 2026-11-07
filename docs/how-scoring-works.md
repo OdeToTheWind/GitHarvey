@@ -50,6 +50,7 @@ One GitHub search call fetches the 30 best matches. GitHarvey scores all 30 and 
 - "Actively maintained" adds a `pushed:>` filter (one year back).
 - "Popular" requires more than 100 stars. Otherwise repos need more than 10 stars.
 - "Beginner friendly" adds `good-first-issues:>0`.
+- **Any** (the last priority) removes every filter: no minimum stars, no `archived:false`, no recency or good-first-issue filter. The search then covers all kinds of repos, including tiny, old and archived ones. It cannot be combined with the other priorities: choosing one of them turns Any off. A language, if you chose one, still applies.
 - **Language** is optional. Pick one from the list, or choose Other and type any language GitHub knows (for example Kotlin or Jupyter Notebook). Typed names may use letters, numbers, spaces and `+ # . -` only, so they can never add search qualifiers of their own.
 - "Permissive license" changes the license score, as above.
 - Goal "stay updated" asks GitHub for the most recently updated matches first.
@@ -94,4 +95,8 @@ A repo that is archived, or has had no push for over a year, also gets a plain w
 ## Find alternatives
 
 Archived or Risky repos offer "Find alternatives". It searches again using the repo's first two topics (or its name), in the same language when it is one GitHarvey can filter by, with the same priorities, and leaves the repo itself out.
+
+## Comparing many repos
+
+You can compare 2 to 10 repos. Ticking an 11th in the results shows an alert and does not add it; typing more than 10 into the compare box is refused with a message. With up to 5 repos the table includes the facts under "Also worth knowing". With 6 to 10 repos the slower ones (contributors, merge time, maintenance trend, good first issues, dependencies) are left out, to stay within GitHub's rate limits. The score and the basic rows are always there.
 
